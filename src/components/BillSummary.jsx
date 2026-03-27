@@ -2,6 +2,19 @@ import React from 'react';
 import { RefreshCcw } from 'lucide-react';
 
 const lineTotal = (item) => (Number(item.price) || 0) * (Number(item.quantity) || 1);
+const getQuantity = (item) => Math.max(1, Number(item.quantity) || 1);
+
+const normalizeAssignmentMap = (value) => {
+  if (!value) {
+    return {};
+  }
+
+  if (Array.isArray(value)) {
+    return value.reduce((acc, personId) => ({ ...acc, [personId]: 1 }), {});
+  }
+
+  return value;
+};
 
 export default function BillSummary({ items, people, assignments, taxRate, serviceRate, discountAmount, onReset }) {
   const calculateTotals = () => {
@@ -22,25 +35,37 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
     });
 
     items.forEach((item) => {
-      const assignedIds = assignments[item.id] || [];
-      if (!assignedIds.length) {
+      const assignedMap = normalizeAssignmentMap(assignments[item.id]);
+      const assignedEntries = Object.entries(assignedMap).filter(([, portion]) => (Number(portion) || 0) > 0);
+
+      if (!assignedEntries.length) {
         return;
       }
 
-      const splitValue = lineTotal(item) / assignedIds.length;
-      assignedIds.forEach((pid) => {
+      const quantity = getQuantity(item);
+      const total = lineTotal(item);
+      const unitPrice = quantity > 0 ? total / quantity : total;
+
+      let itemAssignedSubtotal = 0;
+
+      assignedEntries.forEach(([pid, portion]) => {
         if (!totals[pid]) {
           return;
         }
-        totals[pid].subtotal += splitValue;
+
+        const safePortion = Math.max(0, Number(portion) || 0);
+        const personShare = safePortion * unitPrice;
+        itemAssignedSubtotal += personShare;
+
+        totals[pid].subtotal += personShare;
         totals[pid].items.push({
           name: item.name,
-          quantity: item.quantity || 1,
-          share: splitValue
+          quantity: safePortion,
+          share: personShare
         });
       });
 
-      assignedSubtotal += lineTotal(item);
+      assignedSubtotal += Math.min(total, itemAssignedSubtotal);
     });
 
     const totalDiscountAmt = Math.min(Math.max(0, Number(discountAmount) || 0), assignedSubtotal);
@@ -117,7 +142,7 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
               ) : (
                 person.items.map((item, idx) => (
                   <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', fontSize: '0.9rem', borderBottom: '1px dashed rgba(255,255,255,0.1)', paddingBottom: '0.25rem' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>{item.name} ({item.quantity}x)</span>
+                    <span style={{ color: 'var(--text-secondary)' }}>{item.name} (x{item.quantity})</span>
                     <span>{item.share.toFixed(2)}</span>
                   </div>
                 ))
