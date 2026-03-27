@@ -14,7 +14,7 @@ function App() {
   const [image, setImage] = useState(null);
   const [items, setItems] = useState([]);
   const [people, setPeople] = useState([]);
-  const [assignments, setAssignments] = useState({}); // { itemId: [personId, ...] }
+  const [assignments, setAssignments] = useState({}); // { itemId: { [personId]: portionOrShareFlag } }
 
   // Tax, Service & Discount State
   const [taxRate, setTaxRate] = useState(10);

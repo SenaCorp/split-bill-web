@@ -3,6 +3,7 @@ import { RefreshCcw } from 'lucide-react';
 
 const lineTotal = (item) => (Number(item.price) || 0) * (Number(item.quantity) || 1);
 const getQuantity = (item) => Math.max(1, Number(item.quantity) || 1);
+const isSharedSingleItem = (item) => getQuantity(item) === 1;
 
 const normalizeAssignmentMap = (value) => {
   if (!value) {
@@ -45,6 +46,7 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
       const quantity = getQuantity(item);
       const total = lineTotal(item);
       const unitPrice = quantity > 0 ? total / quantity : total;
+      const canShareSingleItem = isSharedSingleItem(item);
 
       let itemAssignedSubtotal = 0;
 
@@ -54,18 +56,20 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
         }
 
         const safePortion = Math.max(0, Number(portion) || 0);
-        const personShare = safePortion * unitPrice;
+        const personShare = canShareSingleItem
+          ? total / assignedEntries.length
+          : safePortion * unitPrice;
         itemAssignedSubtotal += personShare;
 
         totals[pid].subtotal += personShare;
         totals[pid].items.push({
           name: item.name,
-          quantity: safePortion,
+          quantity: canShareSingleItem ? 1 : safePortion,
           share: personShare
         });
       });
 
-      assignedSubtotal += Math.min(total, itemAssignedSubtotal);
+      assignedSubtotal += canShareSingleItem ? total : Math.min(total, itemAssignedSubtotal);
     });
 
     const totalDiscountAmt = Math.min(Math.max(0, Number(discountAmount) || 0), assignedSubtotal);
