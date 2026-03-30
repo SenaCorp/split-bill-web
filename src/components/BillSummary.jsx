@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshCcw } from 'lucide-react';
+import { MessageCircle, RefreshCcw } from 'lucide-react';
 
 const lineTotal = (item) => (Number(item.price) || 0) * (Number(item.quantity) || 1);
 const getQuantity = (item) => Math.max(1, Number(item.quantity) || 1);
@@ -105,6 +105,27 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
   const grandTotal = Math.max(0, assignedSubtotal - totalDiscountAmt) + totalTaxAmt + totalServiceAmt;
   const unassignedSubtotal = allSubtotal - assignedSubtotal;
 
+  const handleShareToWhatsApp = () => {
+    const billLines = peopleTotals
+      .filter((person) => person.total > 0)
+      .map((person) => `• ${person.name}: ${person.total.toFixed(2)}`);
+
+    const message = [
+      '🧾 Bill Summary',
+      '',
+      ...billLines,
+      '',
+      `Subtotal: ${assignedSubtotal.toFixed(2)}`,
+      `Discount: -${totalDiscountAmt.toFixed(2)}`,
+      `Service (${serviceRate}%): ${totalServiceAmt.toFixed(2)}`,
+      `Tax (${taxRate}%): ${totalTaxAmt.toFixed(2)}`,
+      `Grand Total: ${grandTotal.toFixed(2)}`
+    ].join('\n');
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="glass-panel animate-fade-in bill-summary-shell">
       <div className="bill-summary-header">
@@ -157,9 +178,18 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
       </div>
 
       <div className="bill-summary-footer">
-        <button className="btn-secondary" onClick={onReset} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: '0 auto' }}>
-          <RefreshCcw size={18} /> Start Over
-        </button>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <button
+            className="btn-primary"
+            onClick={handleShareToWhatsApp}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+          >
+            <MessageCircle size={18} /> Share to WhatsApp
+          </button>
+          <button className="btn-secondary" onClick={onReset} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <RefreshCcw size={18} /> Start Over
+          </button>
+        </div>
       </div>
     </div>
   );
