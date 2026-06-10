@@ -120,30 +120,26 @@ JSON format:
 
   if (error) {
     return (
-      <div className="glass-panel animate-fade-in" style={{ padding: '2rem', textAlign: 'center', maxWidth: '500px', width: '100%', borderColor: '#ef4444' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', color: '#ef4444' }}>
-          <AlertCircle size={48} />
+      <section className="flow-card state-card error-card">
+        <div className="section-label-bar">Scan error</div>
+        <div className="state-body">
+          <AlertCircle size={42} />
           <p>{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="btn-primary"
-            style={{ background: '#ef4444', marginTop: '1rem' }}
-          >
-            Try Again
-          </button>
+          <button onClick={() => window.location.reload()} className="btn-submit">Try again</button>
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="glass-panel animate-fade-in" style={{ padding: '3rem', textAlign: 'center', maxWidth: '600px', width: '100%' }}>
-      <Loader2 className="animate-spin" size={48} style={{ color: 'var(--accent-color)', margin: '0 auto 1.5rem' }} />
-      <h2 style={{ marginBottom: '0.5rem' }}>Processing Receipt</h2>
-      <p style={{ color: 'var(--text-secondary)' }}>{status}</p>
-      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '1rem' }}>
-        Using {OPENAI_MODEL} via backend proxy (API key is not exposed to browser)
-      </p>
-    </div>
+    <section className="flow-card state-card">
+      <div className="section-label-bar">Receipt scan</div>
+      <div className="state-body">
+        <Loader2 className="animate-spin" size={44} />
+        <h2>Processing receipt</h2>
+        <p>{status}</p>
+        <small>Using {OPENAI_MODEL} via backend proxy. The API key stays on the server.</small>
+      </div>
+    </section>
   );
 }

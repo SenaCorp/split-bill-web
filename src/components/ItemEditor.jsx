@@ -60,132 +60,118 @@ export default function ItemEditor({
   const grandTotal = discountedSubtotal + taxAmount + serviceAmount;
 
   return (
-    <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '800px', display: 'flex', flexDirection: 'column', height: '80vh' }}>
-      <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Verify Items</h2>
-        <button className="btn-secondary" onClick={addItem}><Plus size={18} style={{ marginRight: '0.5rem' }} /> Add Item</button>
+    <section className="flow-card editor-card">
+      <div className="flow-header">
+        <div>
+          <div className="section-label-bar">Official items</div>
+          <h2>Verify items</h2>
+        </div>
+        <button className="btn-secondary" onClick={addItem}>
+          <Plus size={16} /> Add item
+        </button>
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
+      <div className="scroll-panel">
         {items.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
-            No items found. Add some manually!
+          <div className="empty-state">
+            <strong>No receipt items found.</strong>
+            <span>Add rows manually to continue the split.</span>
           </div>
         )}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+
+        <div className="item-list">
           {items.map((item) => (
-            <div key={item.id} style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '1rem',
-              background: 'rgba(255,255,255,0.05)',
-              borderRadius: '12px'
-            }}>
+            <article key={item.id} className="news-row item-row">
               {editingId === item.id ? (
-                <div style={{ display: 'flex', gap: '0.5rem', flex: 1, flexWrap: 'wrap' }}>
+                <div className="edit-row">
                   <input
                     type="text"
                     value={editForm.name}
-                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    style={{ flex: 1, minWidth: '180px' }}
+                    onChange={(event) => setEditForm({ ...editForm, name: event.target.value })}
                     autoFocus
                   />
                   <input
                     type="number"
                     value={editForm.price}
-                    onChange={(e) => setEditForm({ ...editForm, price: e.target.value })}
-                    style={{ width: '110px' }}
+                    onChange={(event) => setEditForm({ ...editForm, price: event.target.value })}
                     placeholder="Unit"
                   />
                   <input
                     type="number"
                     min={1}
                     value={editForm.quantity}
-                    onChange={(e) => setEditForm({ ...editForm, quantity: e.target.value })}
-                    style={{ width: '90px' }}
+                    onChange={(event) => setEditForm({ ...editForm, quantity: event.target.value })}
                     placeholder="Qty"
                   />
-                  <button className="btn-primary" style={{ padding: '0.5rem' }} onClick={() => saveEdit(item.id)}>
-                    <Check size={18} />
+                  <button className="icon-action is-confirm" onClick={() => saveEdit(item.id)} aria-label={`Save ${item.name}`}>
+                    <Check size={16} />
                   </button>
                 </div>
               ) : (
                 <>
-                  <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <span style={{ fontWeight: 500 }}>{item.name}</span>
-                    <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                      {Number(item.quantity) || 1} × {(Number(item.price) || 0).toFixed(2)}
-                    </span>
+                  <div className="item-main">
+                    <strong>{item.name}</strong>
+                    <span>{Number(item.quantity) || 1} x {(Number(item.price) || 0).toFixed(2)}</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <span style={{ fontWeight: 600 }}>{lineTotal(item).toFixed(2)}</span>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button style={{ background: 'transparent', color: 'var(--text-secondary)' }} onClick={() => startEdit(item)}>
-                        <Edit2 size={16} />
-                      </button>
-                      <button style={{ background: 'transparent', color: 'var(--danger)' }} onClick={() => removeItem(item.id)}>
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
+                  <div className="item-actions">
+                    <strong>{lineTotal(item).toFixed(2)}</strong>
+                    <button className="icon-action" onClick={() => startEdit(item)} aria-label={`Edit ${item.name}`}>
+                      <Edit2 size={15} />
+                    </button>
+                    <button className="icon-action is-danger" onClick={() => removeItem(item.id)} aria-label={`Remove ${item.name}`}>
+                      <Trash2 size={15} />
+                    </button>
                   </div>
                 </>
               )}
-            </div>
+            </article>
           ))}
         </div>
       </div>
 
-      <div style={{ padding: '1rem', borderTop: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.2)', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Tax (%)</label>
-              <input
-                type="number"
-                value={taxRate}
-                onChange={(e) => setTaxRate(Math.max(0, Number(e.target.value)))}
-                style={{ width: '70px', padding: '0.25rem' }}
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Service (%)</label>
-              <input
-                type="number"
-                value={serviceRate}
-                onChange={(e) => setServiceRate(Math.max(0, Number(e.target.value)))}
-                style={{ width: '70px', padding: '0.25rem' }}
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <label style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Discount</label>
-              <input
-                type="number"
-                min={0}
-                value={discountAmount}
-                onChange={(e) => setDiscountAmount(Math.max(0, Number(e.target.value)))}
-                style={{ width: '110px', padding: '0.25rem' }}
-                placeholder="0"
-              />
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', fontSize: '0.9rem' }}>
-            <div style={{ color: 'var(--text-secondary)' }}>Subtotal: {subtotal.toFixed(2)}</div>
-            <div style={{ color: appliedDiscount > 0 ? 'var(--success)' : 'var(--text-secondary)' }}>- Discount: {appliedDiscount.toFixed(2)}</div>
-            <div style={{ color: 'var(--text-secondary)' }}>+ Tax: {taxAmount.toFixed(2)}</div>
-            <div style={{ color: 'var(--text-secondary)' }}>+ Service: {serviceAmount.toFixed(2)}</div>
-          </div>
+      <div className="totals-panel">
+        <div className="rate-grid">
+          <label>
+            <span>Tax (%)</span>
+            <input
+              type="number"
+              value={taxRate}
+              onChange={(event) => setTaxRate(Math.max(0, Number(event.target.value)))}
+            />
+          </label>
+          <label>
+            <span>Service (%)</span>
+            <input
+              type="number"
+              value={serviceRate}
+              onChange={(event) => setServiceRate(Math.max(0, Number(event.target.value)))}
+            />
+          </label>
+          <label>
+            <span>Discount</span>
+            <input
+              type="number"
+              min={0}
+              value={discountAmount}
+              onChange={(event) => setDiscountAmount(Math.max(0, Number(event.target.value)))}
+              placeholder="0"
+            />
+          </label>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px dashed rgba(255,255,255,0.1)', paddingTop: '0.75rem' }}>
-          <div>
-            <span style={{ color: 'var(--text-secondary)' }}>Calculated Total:</span>
-            <strong style={{ marginLeft: '0.5rem', fontSize: '1.5rem' }}>{grandTotal.toFixed(2)}</strong>
-          </div>
-          <button className="btn-primary" onClick={onNext}>Next: Assign People</button>
+        <dl className="receipt-totals">
+          <div><dt>Subtotal</dt><dd>{subtotal.toFixed(2)}</dd></div>
+          <div><dt>Discount</dt><dd>-{appliedDiscount.toFixed(2)}</dd></div>
+          <div><dt>Tax</dt><dd>{taxAmount.toFixed(2)}</dd></div>
+          <div><dt>Service</dt><dd>{serviceAmount.toFixed(2)}</dd></div>
+        </dl>
+
+        <div className="grand-total">
+          <span>Calculated total</span>
+          <strong>{grandTotal.toFixed(2)}</strong>
+          <button className="btn-submit" onClick={onNext}>Next: assign people</button>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

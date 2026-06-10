@@ -22,10 +22,10 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
     const totals = {};
     let assignedSubtotal = 0;
 
-    people.forEach((p) => {
-      totals[p.id] = {
-        name: p.name,
-        color: p.color,
+    people.forEach((person) => {
+      totals[person.id] = {
+        name: person.name,
+        color: person.color,
         subtotal: 0,
         taxShare: 0,
         serviceShare: 0,
@@ -78,17 +78,17 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
     const taxBase = discountedSubtotal + totalServiceAmt;
     const totalTaxAmt = taxBase * (taxRate / 100);
 
-    people.forEach((p) => {
-      const person = totals[p.id];
-      if (assignedSubtotal <= 0 || person.subtotal <= 0) {
+    people.forEach((person) => {
+      const personTotal = totals[person.id];
+      if (assignedSubtotal <= 0 || personTotal.subtotal <= 0) {
         return;
       }
 
-      const ratio = person.subtotal / assignedSubtotal;
-      person.discountShare = totalDiscountAmt * ratio;
-      person.taxShare = totalTaxAmt * ratio;
-      person.serviceShare = totalServiceAmt * ratio;
-      person.total = person.subtotal - person.discountShare + person.taxShare + person.serviceShare;
+      const ratio = personTotal.subtotal / assignedSubtotal;
+      personTotal.discountShare = totalDiscountAmt * ratio;
+      personTotal.taxShare = totalTaxAmt * ratio;
+      personTotal.serviceShare = totalServiceAmt * ratio;
+      personTotal.total = personTotal.subtotal - personTotal.discountShare + personTotal.taxShare + personTotal.serviceShare;
     });
 
     return {
@@ -108,10 +108,10 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
   const handleShareToWhatsApp = () => {
     const billLines = peopleTotals
       .filter((person) => person.total > 0)
-      .map((person) => `• ${person.name}: ${person.total.toFixed(2)}`);
+      .map((person) => `- ${person.name}: ${person.total.toFixed(2)}`);
 
     const message = [
-      '🧾 Bill Summary',
+      'Bill Summary',
       '',
       ...billLines,
       '',
@@ -127,70 +127,63 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
   };
 
   return (
-    <div className="glass-panel animate-fade-in bill-summary-shell">
-      <div className="bill-summary-header">
-        <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Bill Summary</h2>
-
-        <div className="bill-summary-meta">
-          <div className="bill-summary-stats">
-            <span>Assigned Subtotal: {assignedSubtotal.toFixed(2)}</span>
-            <span>Discount: -{totalDiscountAmt.toFixed(2)}</span>
-            <span>Tax ({taxRate}%): {totalTaxAmt.toFixed(2)}</span>
-            <span>Svc ({serviceRate}%): {totalServiceAmt.toFixed(2)}</span>
-          </div>
-          <div style={{ marginTop: '0.5rem', fontSize: '1.25rem', fontWeight: 'bold' }}>
-            Grand Total: <span style={{ color: 'var(--success)' }}>{grandTotal.toFixed(2)}</span>
-          </div>
-          {unassignedSubtotal > 0 && (
-            <div style={{ marginTop: '0.5rem', color: 'var(--danger)', fontSize: '0.85rem' }}>
-              Unassigned items subtotal: {unassignedSubtotal.toFixed(2)}
-            </div>
-          )}
+    <section className="flow-card bill-summary-shell">
+      <div className="flow-header summary-head">
+        <div>
+          <div className="section-label-bar">Final score</div>
+          <h2>Bill summary</h2>
         </div>
+        <strong className="summary-total">{grandTotal.toFixed(2)}</strong>
+      </div>
+
+      <div className="bill-summary-meta">
+        <dl className="summary-stats">
+          <div><dt>Assigned subtotal</dt><dd>{assignedSubtotal.toFixed(2)}</dd></div>
+          <div><dt>Discount</dt><dd>-{totalDiscountAmt.toFixed(2)}</dd></div>
+          <div><dt>Tax ({taxRate}%)</dt><dd>{totalTaxAmt.toFixed(2)}</dd></div>
+          <div><dt>Svc ({serviceRate}%)</dt><dd>{totalServiceAmt.toFixed(2)}</dd></div>
+        </dl>
+        {unassignedSubtotal > 0 && (
+          <div className="inline-error">
+            Unassigned items subtotal: {unassignedSubtotal.toFixed(2)}
+          </div>
+        )}
       </div>
 
       <div className="bill-summary-grid">
         {peopleTotals.map((person) => (
-          <div key={person.name} className="bill-summary-card">
-            <div style={{ background: person.color, padding: '1rem', color: '#1e293b' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '0.75rem' }}>
-                <h3 style={{ fontSize: '1.2rem', overflowWrap: 'anywhere' }}>{person.name}</h3>
-                <span style={{ fontSize: '1.35rem', fontWeight: '800' }}>{person.total.toFixed(2)}</span>
+          <article key={person.name} className="bill-summary-card" style={{ '--person-color': person.color }}>
+            <header>
+              <div>
+                <h3>{person.name}</h3>
+                <span>Sub {person.subtotal.toFixed(2)} | -{person.discountShare.toFixed(2)} +{(person.taxShare + person.serviceShare).toFixed(2)} fees</span>
               </div>
-              <div style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                Sub: {person.subtotal.toFixed(2)} | -{person.discountShare.toFixed(2)} +{(person.taxShare + person.serviceShare).toFixed(2)} fees
-              </div>
-            </div>
-            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1 }}>
+              <strong>{person.total.toFixed(2)}</strong>
+            </header>
+            <div className="summary-lines">
               {person.items.length === 0 ? (
-                <p style={{ color: 'var(--text-secondary)', fontStyle: 'italic' }}>No items assigned.</p>
+                <p>No items assigned.</p>
               ) : (
-                person.items.map((item, idx) => (
-                  <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', fontSize: '0.9rem', borderBottom: '1px dashed rgba(255,255,255,0.1)', paddingBottom: '0.25rem' }}>
-                    <span style={{ color: 'var(--text-secondary)' }}>{item.name} (x{item.quantity})</span>
-                    <span>{item.share.toFixed(2)}</span>
+                person.items.map((item, index) => (
+                  <div key={index} className="summary-line">
+                    <span>{item.name} (x{item.quantity})</span>
+                    <strong>{item.share.toFixed(2)}</strong>
                   </div>
                 ))
               )}
             </div>
-          </div>
+          </article>
         ))}
       </div>
 
-      <div className="bill-summary-footer">
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-          <button
-            className="btn-primary"
-            onClick={handleShareToWhatsApp}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-          >
-            <MessageCircle size={18} /> Share to WhatsApp
-          </button>
-          <button className="btn-secondary" onClick={onReset} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <RefreshCcw size={18} /> Start Over
-          </button>
-        </div>
+      <div className="flow-actions">
+        <button className="btn-submit" onClick={handleShareToWhatsApp}>
+          <MessageCircle size={17} /> Share to WhatsApp
+        </button>
+        <button className="btn-secondary" onClick={onReset}>
+          <RefreshCcw size={17} /> Start over
+        </button>
       </div>
-    </div>
+    </section>
   );
 }

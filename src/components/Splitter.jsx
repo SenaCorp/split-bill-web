@@ -84,21 +84,18 @@ export default function Splitter({ items, people, assignments, setAssignments, o
   const canProceed = items.length > 0 && invalidItems === 0;
 
   return (
-    <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '900px', display: 'flex', flexDirection: 'column', height: '85vh' }}>
-      <div style={{ padding: '1.5rem', borderBottom: '1px solid var(--glass-border)' }}>
-        <h2>Assign Items</h2>
-        <p style={{ color: 'var(--text-secondary)' }}>
-          Item quantity 1 bisa dibagi ke beberapa orang. Untuk quantity di atas 1, total porsi harus sama dengan quantity item.
-        </p>
-        {invalidItems > 0 && (
-          <p style={{ color: 'var(--danger)', fontSize: '0.85rem', marginTop: '0.25rem' }}>
-            {invalidItems} item belum valid.
-          </p>
-        )}
+    <section className="flow-card splitter-card">
+      <div className="flow-header">
+        <div>
+          <div className="section-label-bar">Player poll</div>
+          <h2>Assign items</h2>
+          <p>Quantity 1 can be shared by several people. Quantity above 1 must match the assigned portions.</p>
+        </div>
+        {invalidItems > 0 && <span className="status-badge is-error">{invalidItems} invalid</span>}
       </div>
 
-      <div style={{ flex: 1, overflowY: 'auto', padding: '1rem' }}>
-        <div style={{ display: 'grid', gap: '1rem' }}>
+      <div className="scroll-panel">
+        <div className="assignment-list">
           {items.map((item) => {
             const state = itemStates.find((entry) => entry.itemId === item.id);
             const assignedMap = state?.assignedMap || {};
@@ -113,96 +110,74 @@ export default function Splitter({ items, people, assignments, setAssignments, o
             const sharedSingleItemShare = assignedPeopleCount > 0 ? total / assignedPeopleCount : 0;
 
             return (
-              <div key={item.id} style={{
-                background: isValid ? 'rgba(16, 185, 129, 0.05)' : 'rgba(255,255,255,0.05)',
-                padding: '1rem',
-                borderRadius: '12px',
-                border: isValid ? '1px solid rgba(16, 185, 129, 0.2)' : '1px solid rgba(239,68,68,0.35)'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', gap: '1rem' }}>
-                  <span style={{ fontWeight: 500 }}>{item.name} <small style={{ color: 'var(--text-secondary)' }}>({quantity}x)</small></span>
-                  <span style={{ fontWeight: 600 }}>{total.toFixed(2)}</span>
+              <article key={item.id} className={`assignment-card ${isValid ? 'is-valid' : 'is-invalid'}`}>
+                <div className="assignment-head">
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>{quantity}x item</span>
+                  </div>
+                  <strong>{total.toFixed(2)}</strong>
                 </div>
 
-                <div style={{ marginBottom: '0.75rem', fontSize: '0.85rem', color: isValid ? 'var(--success)' : 'var(--danger)' }}>
+                <div className={`assignment-status ${isValid ? 'is-valid' : 'is-invalid'}`}>
                   {canShareSingleItem
-                    ? `Dibagi ke ${assignedPeopleCount} orang`
-                    : `Porsi terassign: ${assignedTotalPortion}/${quantity}`}
+                    ? `Shared by ${assignedPeopleCount} people`
+                    : `Assigned portions: ${assignedTotalPortion}/${quantity}`}
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <div className="portion-grid">
                   {people.map((person) => {
                     const portions = Math.max(0, Number(assignedMap[person.id]) || 0);
                     const share = canShareSingleItem
                       ? (portions > 0 ? sharedSingleItemShare : 0)
                       : portions * unitPrice;
                     return (
-                      <div
-                        key={person.id}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.35rem',
-                          background: portions > 0 ? person.color : 'rgba(255,255,255,0.08)',
-                          color: portions > 0 ? 'white' : 'var(--text-secondary)',
-                          border: portions > 0 ? `1px solid ${person.color}` : '1px solid rgba(255,255,255,0.1)',
-                          padding: '0.25rem 0.5rem',
-                          borderRadius: '20px',
-                          fontSize: '0.85rem',
-                          opacity: portions > 0 ? 1 : 0.8
-                        }}
-                      >
+                      <div key={person.id} className={`portion-chip ${portions > 0 ? 'is-active' : ''}`} style={{ '--person-color': person.color }}>
                         <button
                           type="button"
                           onClick={() => updatePortion(item, person.id, -1)}
-                          style={{ all: 'unset', cursor: 'pointer', fontWeight: 700, padding: '0 0.25rem' }}
                           aria-label={`Kurangi porsi ${person.name} untuk ${item.name}`}
                         >
-                          −
+                          -
                         </button>
                         <span>{person.name} x{portions}</span>
                         <button
                           type="button"
                           onClick={() => updatePortion(item, person.id, 1)}
-                          style={{ all: 'unset', cursor: 'pointer', fontWeight: 700, padding: '0 0.25rem' }}
                           aria-label={`Tambah porsi ${person.name} untuk ${item.name}`}
                         >
                           +
                         </button>
-                        {portions > 0 && <span style={{ fontSize: '0.75em' }}> ({share.toFixed(2)})</span>}
+                        {portions > 0 && <small>{share.toFixed(2)}</small>}
                       </div>
                     );
                   })}
                 </div>
 
                 {isAssigned && !isValid && (
-                  <div style={{ marginTop: '0.65rem', fontSize: '0.8rem', color: 'var(--danger)' }}>
+                  <div className="inline-error">
                     {canShareSingleItem
-                      ? 'Pilih minimal satu orang untuk item ini.'
-                      : `Total porsi harus tepat ${quantity}. Sekarang: ${assignedTotalPortion}.`}
+                      ? 'Choose at least one person for this item.'
+                      : `Total portions must be ${quantity}. Current: ${assignedTotalPortion}.`}
                   </div>
                 )}
 
                 {isAssigned && (
-                  <button
-                    type="button"
-                    onClick={() => clearItemAssignment(item.id)}
-                    style={{ all: 'unset', marginTop: '0.6rem', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--text-secondary)' }}
-                  >
+                  <button type="button" onClick={() => clearItemAssignment(item.id)} className="text-button">
                     Reset assignment item
                   </button>
                 )}
-              </div>
+              </article>
             );
           })}
         </div>
       </div>
 
-      <div style={{ padding: '1.5rem', borderTop: '1px solid var(--glass-border)', textAlign: 'right', background: 'rgba(0,0,0,0.2)' }}>
-        <button className="btn-primary" onClick={onNext} disabled={!canProceed} style={{ opacity: canProceed ? 1 : 0.5, cursor: canProceed ? 'pointer' : 'not-allowed' }}>
-          View Summary
+      <div className="flow-actions">
+        <button className="btn-submit" onClick={onNext} disabled={!canProceed}>
+          View summary
         </button>
       </div>
-    </div>
+    </section>
   );
 }
