@@ -1,12 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ImageUploader from './components/ImageUploader';
 import ReceiptProcessor from './components/ReceiptProcessor';
 import ItemEditor from './components/ItemEditor';
 import PersonSetup from './components/PersonSetup';
 import Splitter from './components/Splitter';
 import BillSummary from './components/BillSummary';
+import PaymentMethodSetup from './components/PaymentMethodSetup';
+import BillPage from './components/BillPage';
+
+const parseRoute = () => {
+  const segments = window.location.pathname.split('/').filter(Boolean);
+  if (segments[0] !== 'bill' || !segments[1]) {
+    return { mode: 'home' };
+  }
+
+  if (segments[2] === 'pay' && segments[3]) {
+    return { mode: 'pay', billId: segments[1], personId: segments[3] };
+  }
+
+  if (segments[2] === 'admin' && segments[3]) {
+    return { mode: 'admin', billId: segments[1], adminToken: segments[3] };
+  }
+
+  return { mode: 'public', billId: segments[1] };
+};
 
 function App() {
+  const [route, setRoute] = useState(parseRoute);
   const [step, setStep] = useState('upload'); // upload, processing, edit, people, split, summary
   const [image, setImage] = useState(null);
   const [items, setItems] = useState([]);
@@ -16,8 +36,19 @@ function App() {
   const [taxRate, setTaxRate] = useState(10);
   const [serviceRate, setServiceRate] = useState(5);
   const [discountAmount, setDiscountAmount] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState({
+    bankName: '',
+    accountNumber: '',
+    accountHolder: '',
+    qrisText: ''
+  });
 
-  const steps = [
+  const isRemoteBillRoute = route.mode !== 'home';
+  const remoteStepLabel = route.mode === 'pay' ? 'Pay' : route.mode === 'admin' ? 'Admin' : 'Bill';
+
+  const steps = isRemoteBillRoute ? [
+    { key: remoteStepLabel.toLowerCase(), label: remoteStepLabel }
+  ] : [
     { key: 'upload', label: 'Upload' },
     { key: 'processing', label: 'Scan' },
     { key: 'edit', label: 'Edit' },
@@ -26,7 +57,18 @@ function App() {
     { key: 'summary', label: 'Result' }
   ];
 
-  const activeStepIndex = Math.max(0, steps.findIndex((item) => item.key === step));
+  const activeStepIndex = isRemoteBillRoute ? 0 : Math.max(0, steps.findIndex((item) => item.key === step));
+
+  const navigate = (path) => {
+    window.history.pushState({}, '', path);
+    setRoute(parseRoute());
+  };
+
+  useEffect(() => {
+    const handlePopState = () => setRoute(parseRoute());
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const handleImageUpload = (imgData) => {
     setImage(imgData);
@@ -67,6 +109,7 @@ function App() {
     setTaxRate(10);
     setServiceRate(5);
     setDiscountAmount(0);
+    setPaymentMethod({ bankName: '', accountNumber: '', accountHolder: '', qrisText: '' });
   };
 
   return (
@@ -98,7 +141,7 @@ function App() {
           {steps.map((item, index) => (
             <span
               key={item.key}
-              className={`step-pill ${step === item.key ? 'is-active' : ''} ${index < activeStepIndex ? 'is-complete' : ''}`}
+              className={`step-pill ${(isRemoteBillRoute || step === item.key) ? 'is-active' : ''} ${index < activeStepIndex ? 'is-complete' : ''}`}
             >
               {item.label}
             </span>
@@ -123,46 +166,52 @@ function App() {
           </aside>
 
           <main className="workflow-panel" id="upload">
-            {step === 'upload' && <ImageUploader onImageUpload={handleImageUpload} />}
+            {isRemoteBillRoute && <BillPage route={route} navigate={navigate} />}
 
-            {step === 'processing' && <ReceiptProcessor image={image} onItemsFound={handleItemsFound} />}
+            {!isRemoteBillRoute && step === 'upload' && <ImageUploader onImageUpload={handleImageUpload} />}
 
-            {step === 'edit' && (
+            {!isRemoteBillRoute && step === 'processing' && <ReceiptProcessor image={image} onItemsFound={handleItemsFound} />}
+
+            {!isRemoteBillRoute && step === 'edit' && (
               <ItemEditor
                 items={items}
                 onUpdateItems={handleItemsUpdate}
-                taxRate={taxRate}
+                  taxRate={taxRate}
                 setTaxRate={setTaxRate}
-                serviceRate={serviceRate}
+                  serviceRate={serviceRate}
                 setServiceRate={setServiceRate}
-                discountAmount={discountAmount}
+                  discountAmount={discountAmount}
                 setDiscountAmount={setDiscountAmount}
                 onNext={() => setStep('people')}
               />
             )}
 
-            {step === 'people' && <PersonSetup people={people} setPeople={setPeople} onNext={() => setStep('split')} />}
+            {!isRemoteBillRoute && step === 'people' && <PersonSetup people={people} setPeople={setPeople} onNext={() => setStep('split')} />}
 
-            {step === 'split' && (
+            {!isRemoteBillRoute && step === 'split' && (
               <Splitter
                 items={items}
-                people={people}
-                assignments={assignments}
+                  people={people}
+                  assignments={assignments}
                 setAssignments={setAssignments}
                 onNext={() => setStep('summary')}
               />
             )}
 
-            {step === 'summary' && (
-              <BillSummary
-                items={items}
-                people={people}
-                assignments={assignments}
-                taxRate={taxRate}
-                serviceRate={serviceRate}
-                discountAmount={discountAmount}
-                onReset={handleReset}
-              />
+            {!isRemoteBillRoute && step === 'summary' && (
+              <>
+                <PaymentMethodSetup paymentMethod={paymentMethod} setPaymentMethod={setPaymentMethod} />
+                <BillSummary
+                  items={items}
+                  people={people}
+                  assignments={assignments}
+                  taxRate={taxRate}
+                  serviceRate={serviceRate}
+                  discountAmount={discountAmount}
+                  paymentMethod={paymentMethod}
+                  onReset={handleReset}
+                />
+              </>
             )}
           </main>
 
