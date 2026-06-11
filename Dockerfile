@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:18-alpine AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Run the Express API and serve the built frontend
-FROM node:18-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 ENV NODE_ENV=production

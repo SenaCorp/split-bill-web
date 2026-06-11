@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createSupabaseClient } from './supabaseClient.mjs';
-import { createMinioClient, createPublicMinioClient, ensureProofBucket, minioBucket } from './minioClient.mjs';
+import { createMinioClient, ensureProofBucket, minioBucket } from './minioClient.mjs';
 import { calculateBillTotals } from './billCalculator.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +25,6 @@ const asyncHandler = (handler) => (req, res, next) => Promise.resolve(handler(re
 
 const supabase = createSupabaseClient();
 const minioClient = createMinioClient();
-const publicMinioClient = createPublicMinioClient();
 await ensureProofBucket(minioClient);
 
 const sendError = (res, status, message) => res.status(status).json({ error: message });
@@ -220,7 +219,7 @@ app.post('/api/bills/:billId/payment-proofs/:personId/upload-url', asyncHandler(
   }
 
   const objectKey = `payment-proofs/${billId}/${personId}/${Date.now()}-${safeFileName(fileName)}`;
-  const uploadUrl = await publicMinioClient.presignedPutObject(minioBucket, objectKey, 10 * 60);
+  const uploadUrl = await minioClient.presignedPutObject(minioBucket, objectKey, 10 * 60);
 
   return res.json({ uploadUrl, objectKey });
 }));
@@ -315,7 +314,7 @@ app.get('/api/payment-proofs/view-url', asyncHandler(async (req, res) => {
     return sendError(res, 400, 'Invalid proof object key.');
   }
 
-  const viewUrl = await publicMinioClient.presignedGetObject(minioBucket, objectKey, 5 * 60);
+  const viewUrl = await minioClient.presignedGetObject(minioBucket, objectKey, 5 * 60);
   return res.json({ viewUrl });
 }));
 

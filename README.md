@@ -47,10 +47,18 @@ A modern web application that simplifies dividing restaurant bills or shared exp
 The easiest way to run the app is using Docker. This builds a production-ready React bundle and serves it from the Node/Express API, so OpenAI, Supabase, and MinIO secrets are not exposed in browser DevTools.
 
 1. Make sure Docker is installed.
-2. Set your OpenAI API key in your shell or `.env` file:
+2. Set your OpenAI, Supabase, and public MinIO settings in your shell or `.env` file:
 
    ```bash
    export OPENAI_API_KEY=your_openai_api_key_here
+   export SUPABASE_URL=https://your-project.supabase.co
+   export SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   export MINIO_ENDPOINT=minio.example.com
+   export MINIO_PORT=443
+   export MINIO_USE_SSL=true
+   export MINIO_ACCESS_KEY=your_minio_access_key
+   export MINIO_SECRET_KEY=your_minio_secret_key
+   export MINIO_BUCKET=split-bill-proofs
    ```
 
 3. Run the following command in the project root:
@@ -64,7 +72,7 @@ The easiest way to run the app is using Docker. This builds a production-ready R
    ```bash
    docker rm -f split-bill-web 2>/dev/null || true
    docker build --no-cache -t split-bill-web .
-   docker run -d --name split-bill-web -p 7771:80 -e OPENAI_API_KEY="$OPENAI_API_KEY" split-bill-web
+   docker run -d --name split-bill-web -p 7771:3000 --env-file .env split-bill-web
    ```
 
 4. Quick check for the OCR route. This should return a JSON error from OpenAI, **not** a static-file 404:
@@ -125,7 +133,7 @@ Use this option if you want to edit the code or run it without Docker.
 ├── server/                      # Express API, Supabase, MinIO, and OCR proxy
 ├── supabase/migrations/         # Database schema for saved bills and proofs
 ├── Dockerfile                   # Multi-stage build (Vite -> Node/Express)
-├── docker-compose.yml           # App + MinIO orchestration
+├── docker-compose.yml           # App orchestration with external MinIO config
 └── vite.config.js               # Vite config with dev API proxy
 ```
 
@@ -192,25 +200,25 @@ Browser code must not receive `SUPABASE_SERVICE_ROLE_KEY`, `MINIO_ACCESS_KEY`, o
 
 ### MinIO setup
 
-For Docker Compose, MinIO is included and exposed at:
+Use one public or externally reachable MinIO/S3-compatible endpoint for both API access and browser presigned URLs. Docker Compose does not start a local MinIO container.
 
-- API: `http://localhost:9000`
-- Console: `http://localhost:9001`
-
-Default local credentials are:
+Required MinIO variables:
 
 ```bash
-MINIO_ACCESS_KEY=minioadmin
-MINIO_SECRET_KEY=minioadmin
+MINIO_ENDPOINT=minio.example.com
+MINIO_PORT=443
+MINIO_USE_SSL=true
+MINIO_ACCESS_KEY=your_minio_access_key
+MINIO_SECRET_KEY=your_minio_secret_key
 MINIO_BUCKET=split-bill-proofs
 ```
 
-The Express server checks for `MINIO_BUCKET` on startup and creates it if needed. The bucket remains private; participants upload through presigned PUT URLs and admins view proofs through presigned GET URLs. In Docker, keep `MINIO_ENDPOINT=minio` for server-to-MinIO access and set `MINIO_PUBLIC_ENDPOINT=localhost` so browser presigned URLs resolve correctly.
+The Express server checks for `MINIO_BUCKET` on startup and creates it if needed. The bucket remains private; participants upload through presigned PUT URLs and admins view proofs through presigned GET URLs. Because the same MinIO endpoint is used to sign URLs, `MINIO_ENDPOINT` must be reachable from participants' browsers.
 
 ### Local development with settlement APIs
 
-1. Copy `.env.example` to `.env` and fill in `OPENAI_API_KEY`, `SUPABASE_URL`, and `SUPABASE_SERVICE_ROLE_KEY`.
-2. Start MinIO locally or with Docker Compose.
+1. Copy `.env.example` to `.env` and fill in `OPENAI_API_KEY`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and the external MinIO variables.
+2. Make sure the configured MinIO endpoint is reachable and allows PUT/GET requests from your app origin.
 3. Start the full dev stack:
 
    ```bash
@@ -245,7 +253,11 @@ Make sure these variables are set before starting Docker Compose:
 OPENAI_API_KEY=...
 SUPABASE_URL=...
 SUPABASE_SERVICE_ROLE_KEY=...
-MINIO_ACCESS_KEY=minioadmin
-MINIO_SECRET_KEY=minioadmin
+MINIO_ENDPOINT=minio.example.com
+MINIO_PORT=443
+MINIO_USE_SSL=true
+MINIO_ACCESS_KEY=your_minio_access_key
+MINIO_SECRET_KEY=your_minio_secret_key
+MINIO_BUCKET=split-bill-proofs
 APP_BASE_URL=http://localhost:7771
 ```
