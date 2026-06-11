@@ -1272,3 +1272,225 @@ input[type="search"] {
     justify-content: flex-end;
   }
 }
+
+textarea {
+  min-height: 74px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 2px;
+  padding: 6px;
+  resize: vertical;
+  box-shadow: inset 1px 1px 0 rgba(33, 36, 46, 0.22);
+}
+
+textarea:focus-visible,
+input[type="file"]:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+.payment-method-panel,
+.share-links-shell,
+.payment-tracker-shell,
+.proof-upload-shell {
+  margin-bottom: 14px;
+}
+
+.payment-method-grid,
+.payment-metrics-grid,
+.person-link-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.payment-method-grid label,
+.link-stack label,
+.proof-upload-form label {
+  display: grid;
+  gap: 5px;
+  color: var(--ink-soft);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.payment-method-grid input,
+.link-stack input,
+.proof-upload-form input,
+.proof-upload-form textarea {
+  width: 100%;
+}
+
+.muted-copy {
+  color: var(--muted-indigo);
+  font-size: 11px;
+  text-transform: none;
+}
+
+.success-note {
+  margin: 10px 0;
+  padding: 8px 10px;
+  color: var(--systems-teal);
+  background: rgba(32, 100, 121, 0.12);
+  border: 1px solid var(--systems-teal);
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.settlement-stack,
+.remote-bill-stack {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.payment-metrics-grid > div,
+.person-link-card,
+.proof-card {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  box-shadow: var(--bevel);
+}
+
+.payment-metrics-grid span,
+.person-link-card span {
+  display: block;
+  color: var(--muted-indigo);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.payment-metrics-grid strong,
+.person-link-card strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.progress-track {
+  height: 14px;
+  margin: 12px 0;
+  overflow: hidden;
+  background: rgba(33, 36, 46, 0.15);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--systems-teal), var(--signal));
+  transition: width 180ms ease;
+}
+
+.proof-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.proof-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.proof-card p {
+  margin-top: 3px;
+  color: var(--muted-indigo);
+}
+
+.proof-actions,
+.compact-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 3px 8px;
+  color: var(--surface);
+  background: var(--muted-indigo);
+  border: 1px solid rgba(33, 36, 46, 0.4);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-pending { background: var(--muted-indigo); }
+.status-uploaded { background: var(--signal); }
+.status-verified { background: var(--systems-teal); }
+.status-rejected { background: var(--games-red); }
+
+.link-stack {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.copy-row {
+  display: flex;
+  gap: 8px;
+}
+
+.copy-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.person-link-card {
+  display: grid;
+  gap: 8px;
+}
+
+.proof-upload-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.status-line {
+  margin-top: 10px;
+  color: var(--ink-soft);
+  font-weight: 800;
+}
+
+.proof-breakdown {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.54);
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+}
+
+@media (max-width: 720px) {
+  .payment-method-grid,
+  .payment-metrics-grid,
+  .person-link-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .proof-card,
+  .copy-row {
+    flex-direction: column;
+  }
+
+  .proof-actions {
+    justify-content: flex-start;
+  }
+}

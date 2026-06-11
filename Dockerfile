@@ -1,5 +1,5 @@
-# Stage 1: Build the React App
-FROM node:18-alpine as build
+# Stage 1: Build the React app
+FROM node:18-alpine AS build
 
 WORKDIR /app
 
@@ -9,16 +9,19 @@ RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
 
-# Stage 2: Serve with Nginx + secure OpenAI proxy
-FROM nginx:alpine
+# Stage 2: Run the Express API and serve the built frontend
+FROM node:18-alpine
 
-RUN apk add --no-cache gettext
+WORKDIR /app
+ENV NODE_ENV=production
+ENV PORT=3000
 
-COPY --from=build /app/dist /usr/share/nginx/html
-COPY nginx.conf.template /etc/nginx/templates/default.conf.template
-COPY docker-entrypoint.sh /docker-entrypoint.sh
-RUN sed -i 's/\r$//' /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
+COPY package.json package-lock.json ./
+RUN npm install --omit=dev --legacy-peer-deps
 
-EXPOSE 80
+COPY --from=build /app/dist ./dist
+COPY server ./server
 
-CMD ["/docker-entrypoint.sh"]
+EXPOSE 3000
+
+CMD ["node", "server/index.mjs"]
