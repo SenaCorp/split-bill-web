@@ -5,6 +5,8 @@ import SharePaymentLinks from './SharePaymentLinks';
 import { apiRequest } from '../utils/api';
 import { calculateBillTotals, formatCurrency } from '../utils/billCalculations';
 
+const currentOrigin = () => window.location.origin;
+
 export default function BillSummary({ items, people, assignments, taxRate, serviceRate, discountAmount, paymentMethod, onReset }) {
   const [savedBill, setSavedBill] = useState(null);
   const [paymentProofs, setPaymentProofs] = useState([]);
@@ -16,23 +18,61 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
     calculateBillTotals({ items, people, assignments, taxRate, serviceRate, discountAmount })
   ), [items, people, assignments, taxRate, serviceRate, discountAmount]);
 
-  const handleShareToWhatsApp = () => {
-    const billLines = peopleTotals
-      .filter((person) => person.total > 0)
-      .map((person) => `- ${person.name}: ${formatCurrency(person.total)}`);
+  const paymentInfo = useMemo(() => [
+    paymentMethod?.bankName && { label: 'Bank / wallet', value: paymentMethod.bankName },
+    paymentMethod?.accountNumber && { label: 'Account number', value: paymentMethod.accountNumber },
+    paymentMethod?.accountHolder && { label: 'Account holder', value: paymentMethod.accountHolder },
+    paymentMethod?.qrisText && { label: 'QRIS / note', value: paymentMethod.qrisText }
+  ].filter(Boolean), [paymentMethod]);
 
-    const message = [
+  const paymentLinks = useMemo(() => {
+    if (!savedBill) return [];
+    const basePublicUrl = shareLinks.publicUrl || `${currentOrigin()}/bill/${savedBill.id}`;
+    return paymentProofs.map((proof) => ({
+      personId: proof.person_id,
+      name: proof.person_name,
+      expectedAmount: Number(proof.expected_amount) || 0,
+      url: `${basePublicUrl}/pay/${proof.person_id}`
+    }));
+  }, [paymentProofs, savedBill, shareLinks.publicUrl]);
+
+  const publicBillUrl = savedBill ? (shareLinks.publicUrl || `${currentOrigin()}/bill/${savedBill.id}`) : '';
+  const adminBillUrl = savedBill
+    ? (shareLinks.adminUrl || (savedBill.admin_token ? `${currentOrigin()}/bill/${savedBill.id}/admin/${savedBill.admin_token}` : ''))
+    : '';
+
+  const buildWhatsAppMessage = () => {
+    const personLines = peopleTotals
+      .filter((person) => person.total > 0)
+      .flatMap((person) => [
+        `- ${person.name}: ${formatCurrency(person.total)}`,
+        ...person.items.map((item) => `  - ${item.name} x${item.quantity}: ${formatCurrency(item.share)}`)
+      ]);
+
+    const paymentLines = paymentInfo.map((item) => `${item.label}: ${item.value}`);
+    const linkLines = paymentLinks.map((link) => `- ${link.name}: ${formatCurrency(link.expectedAmount)}\n  ${link.url}`);
+
+    return [
       'Bill Summary',
       '',
-      ...billLines,
+      'People totals:',
+      ...personLines,
       '',
+      'Bill totals:',
       `Subtotal: ${formatCurrency(assignedSubtotal)}`,
       `Discount: -${formatCurrency(totalDiscountAmt)}`,
       `Service (${serviceRate}%): ${formatCurrency(totalServiceAmt)}`,
       `Tax (${taxRate}%): ${formatCurrency(totalTaxAmt)}`,
-      `Grand Total: ${formatCurrency(grandTotal)}`
+      `Grand Total: ${formatCurrency(grandTotal)}`,
+      ...(paymentLines.length > 0 ? ['', 'Payment destination:', ...paymentLines] : []),
+      ...(publicBillUrl ? ['', `Public bill link: ${publicBillUrl}`] : []),
+      ...(linkLines.length > 0 ? ['', 'Payment upload links:', ...linkLines] : []),
+      ...(savedBill ? ['', 'Admin tracking link is kept out of this WhatsApp message for host privacy.'] : ['', 'Save the bill to generate payment upload links for each person.'])
     ].join('\n');
+  };
 
+  const handleShareToWhatsApp = () => {
+    const message = buildWhatsAppMessage();
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
@@ -102,6 +142,48 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
         )}
       </div>
 
+      <div className="summary-info-grid">
+        <section className="summary-info-card">
+          <h3>Payment destination</h3>
+          {paymentInfo.length > 0 ? (
+            <dl>
+              {paymentInfo.map((item) => (
+                <div key={item.label}>
+                  <dt>{item.label}</dt>
+                  <dd>{item.value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : (
+            <p>No bank or wallet details added yet.</p>
+          )}
+        </section>
+
+        <section className="summary-info-card">
+          <h3>Link information</h3>
+          {savedBill ? (
+            <dl>
+              <div>
+                <dt>Public bill link</dt>
+                <dd>{publicBillUrl}</dd>
+              </div>
+              {adminBillUrl && (
+                <div>
+                  <dt>Admin tracking link</dt>
+                  <dd>{adminBillUrl}</dd>
+                </div>
+              )}
+              <div>
+                <dt>Participant payment links</dt>
+                <dd>{paymentLinks.length} generated</dd>
+              </div>
+            </dl>
+          ) : (
+            <p>Save the bill to generate public, admin, and participant payment links.</p>
+          )}
+        </section>
+      </div>
+
       <div className="bill-summary-grid">
         {peopleTotals.map((person) => (
           <article key={person.id} className="bill-summary-card" style={{ '--person-color': person.color }}>
@@ -145,7 +227,7 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
 
       {savedBill && (
         <div className="settlement-stack">
-          <SharePaymentLinks bill={savedBill} paymentProofs={paymentProofs} publicUrl={shareLinks.publicUrl} adminUrl={shareLinks.adminUrl} />
+          <SharePaymentLinks bill={savedBill} paymentProofs={paymentProofs} publicUrl={shareLinks.publicUrl} adminUrl={shareLinks.adminUrl} paymentInfo={paymentInfo} />
           <PaymentTracker bill={savedBill} paymentProofs={paymentProofs} isAdmin adminToken={savedBill.admin_token} onProofUpdated={handleProofUpdated} />
         </div>
       )}

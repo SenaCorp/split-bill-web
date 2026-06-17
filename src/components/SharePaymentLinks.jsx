@@ -4,7 +4,7 @@ import { formatCurrency } from '../utils/billCalculations';
 
 const currentOrigin = () => window.location.origin;
 
-export default function SharePaymentLinks({ bill, paymentProofs = [], publicUrl, adminUrl }) {
+export default function SharePaymentLinks({ bill, paymentProofs = [], publicUrl, adminUrl, paymentInfo = [] }) {
   const [copyStatus, setCopyStatus] = useState('');
   const basePublicUrl = publicUrl || `${currentOrigin()}/bill/${bill.id}`;
   const resolvedAdminUrl = adminUrl || (bill.admin_token ? `${currentOrigin()}/bill/${bill.id}/admin/${bill.admin_token}` : '');
@@ -19,12 +19,17 @@ export default function SharePaymentLinks({ bill, paymentProofs = [], publicUrl,
   const message = useMemo(() => [
     `Bill Summary: ${bill.title || 'Split bill'}`,
     `Total: ${formatCurrency(bill.grand_total)}`,
+    ...(paymentInfo.length > 0 ? [
+      '',
+      'Payment destination:',
+      ...paymentInfo.map((item) => `${item.label}: ${item.value}`)
+    ] : []),
     '',
     'Payment upload links:',
     ...links.map((link) => `- ${link.name}: ${formatCurrency(link.expectedAmount)}\n  ${link.url}`),
     '',
     'Please upload your payment proof after transfer. Admin tracking link is not included in this public message.'
-  ].join('\n'), [bill, links]);
+  ].join('\n'), [bill, links, paymentInfo]);
 
   const copyText = async (text, label = 'Copied') => {
     try {

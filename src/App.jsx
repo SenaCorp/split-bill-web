@@ -7,9 +7,14 @@ import Splitter from './components/Splitter';
 import BillSummary from './components/BillSummary';
 import PaymentMethodSetup from './components/PaymentMethodSetup';
 import BillPage from './components/BillPage';
+import DesignPreview from './components/DesignPreview';
 
 const parseRoute = () => {
   const segments = window.location.pathname.split('/').filter(Boolean);
+  if (segments[0] === 'design-system' || segments[0] === 'design-preview') {
+    return { mode: 'design' };
+  }
+
   if (segments[0] !== 'bill' || !segments[1]) {
     return { mode: 'home' };
   }
@@ -44,6 +49,7 @@ function App() {
   });
 
   const isRemoteBillRoute = route.mode !== 'home';
+  const isDesignRoute = route.mode === 'design';
   const remoteStepLabel = route.mode === 'pay' ? 'Pay' : route.mode === 'admin' ? 'Admin' : 'Bill';
 
   const steps = isRemoteBillRoute ? [
@@ -112,6 +118,10 @@ function App() {
     setPaymentMethod({ bankName: '', accountNumber: '', accountHolder: '', qrisText: '' });
   };
 
+  if (isDesignRoute) {
+    return <DesignPreview navigate={navigate} />;
+  }
+
   return (
     <div className="app-page">
       <div className="console-shell">
@@ -134,7 +144,7 @@ function App() {
           <span>Split</span>
           <span>Summary</span>
           <button type="button" className="btn-chip">Code Bank</button>
-          <button type="button" className="btn-chip">Bill Finder</button>
+          <button type="button" className="btn-chip" onClick={() => navigate('/design-system')}>Design System</button>
         </nav>
 
         <div className="subnav-strip" aria-label="Workflow progress">
@@ -150,9 +160,9 @@ function App() {
 
         <header className="hero-panel">
           <div>
-            <p className="hero-kicker">Receipt control center</p>
+            <p className="hero-kicker">Cream-canvas receipt workspace</p>
             <h1>Split Bill</h1>
-            <p className="hero-tagline">Upload struk, verify the lines, assign portions, and send the final total.</p>
+            <p className="hero-tagline">Upload a receipt, verify each item, assign portions, and share a clear settlement plan.</p>
           </div>
           <span className="arrow-disc" aria-hidden="true">›</span>
         </header>
@@ -222,14 +232,14 @@ function App() {
             <button type="button" className="rail-button">Help</button>
 
             <section className="info-box">
-              <h2>What is bill finder?</h2>
-              <p>Keep the receipt flow in one compact control panel. Each plate below advances the same bill without changing the saved math.</p>
+              <h2>How this flow works</h2>
+              <p>Keep receipt scanning, item review, people, splits, and payment tracking in one focused workspace.</p>
             </section>
 
             <section className="promo-card">
               <span>V2</span>
-              <strong>Group Pay Advance</strong>
-              <small>Receipt splits for table-sized chaos.</small>
+              <strong>Group Pay</strong>
+              <small>Warm, clear settlement tracking for shared meals.</small>
             </section>
           </aside>
         </div>

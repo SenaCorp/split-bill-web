@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { UserPlus, X } from 'lucide-react';
 
-const personColors = ['#3d4f97', '#206479', '#a7282b', '#7a8aba', '#60619c', '#e48600'];
+const personColors = ['#ff4d8b', '#1a3a3a', '#b8a4ed', '#ffb084', '#e8b94a', '#a4d4c5'];
 
 export default function PersonSetup({ people, setPeople, onNext }) {
   const [name, setName] = useState('');
