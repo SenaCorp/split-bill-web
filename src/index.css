@@ -3543,7 +3543,7 @@ textarea {
   align-items: flex-start;
   padding: 16px;
   color: var(--ink);
-  background: var(--person-color);
+  background: color-mix(in srgb, var(--person-color) 26%, var(--surface));
 }
 
 .bill-summary-card h3 {
