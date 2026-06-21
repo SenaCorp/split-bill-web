@@ -8,8 +8,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: split-bill-web-${{ github.ref }}
-  cancel-in-progress: false
+  group: Default
+  cancel-in-progress: true
 
 jobs:
   build-and-deploy:
