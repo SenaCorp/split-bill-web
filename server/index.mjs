@@ -15,6 +15,12 @@ const distDir = path.join(rootDir, 'dist');
 const app = express();
 const port = Number(process.env.PORT || 3000);
 const appBaseUrl = (process.env.APP_BASE_URL || `http://localhost:${port}`).replace(/\/$/, '');
+const normalizeBasePath = (value = '/') => {
+  const rawValue = String(value || '/').trim();
+  if (!rawValue || rawValue === '/') return '';
+  return `/${rawValue.replace(/^\/+|\/+$/g, '')}`;
+};
+const appBasePath = normalizeBasePath(process.env.APP_BASE_PATH || process.env.VITE_APP_BASE_PATH || '');
 const allowedProofTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'application/pdf']);
 const maxProofSize = 5 * 1024 * 1024;
 
@@ -319,7 +325,13 @@ app.get('/api/payment-proofs/view-url', asyncHandler(async (req, res) => {
 }));
 
 app.use(express.static(distDir));
-app.get('*', (req, res) => {
+if (appBasePath) {
+  app.use(appBasePath, express.static(distDir));
+  app.get([appBasePath, `${appBasePath}/*`], (_req, res) => {
+    res.sendFile(path.join(distDir, 'index.html'));
+  });
+}
+app.get('*', (_req, res) => {
   res.sendFile(path.join(distDir, 'index.html'));
 });
 

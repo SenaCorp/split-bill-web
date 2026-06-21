@@ -8,9 +8,10 @@ import BillSummary from './components/BillSummary';
 import PaymentMethodSetup from './components/PaymentMethodSetup';
 import BillPage from './components/BillPage';
 import DesignPreview from './components/DesignPreview';
+import { stripBasePath, withBasePath } from './utils/basePath';
 
 const parseRoute = () => {
-  const segments = window.location.pathname.split('/').filter(Boolean);
+  const segments = stripBasePath(window.location.pathname).split('/').filter(Boolean);
   if (segments[0] === 'design-system' || segments[0] === 'design-preview') {
     return { mode: 'design' };
   }
@@ -66,7 +67,7 @@ function App() {
   const activeStepIndex = isRemoteBillRoute ? 0 : Math.max(0, steps.findIndex((item) => item.key === step));
 
   const navigate = (path) => {
-    window.history.pushState({}, '', path);
+    window.history.pushState({}, '', withBasePath(path));
     setRoute(parseRoute());
   };
 

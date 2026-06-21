@@ -5,10 +5,17 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const openAiApiKey = env.OPENAI_API_KEY || ''
   const apiBaseUrl = env.API_BASE_URL || 'http://localhost:3000'
+  const appBasePath = env.VITE_APP_BASE_PATH || env.APP_BASE_PATH || '/'
+
+  const normalizeBase = (value) => {
+    const cleanValue = String(value || '/').trim()
+    if (!cleanValue || cleanValue === '/') return '/'
+    return `/${cleanValue.replace(/^\/+|\/+$/g, '')}/`
+  }
 
   return {
     plugins: [react()],
-    base: '/',
+    base: normalizeBase(appBasePath),
     server: {
       proxy: {
         '/api/bills': {
