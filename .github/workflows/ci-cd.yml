@@ -1,0 +1,91 @@
+name: CI/CD
+
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: split-bill-web-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    name: Build and deploy
+    runs-on: [self-hosted, linux, x64]
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Verify Docker
+        run: |
+          set -euo pipefail
+          docker version
+          docker compose version
+
+      - name: Build application image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          docker build \
+            --pull \
+            --label "org.opencontainers.image.source=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+            --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
+            --tag "split-bill-web:${IMAGE_TAG}" \
+            .
+
+      - name: Deploy production
+        if: github.ref == 'refs/heads/main'
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+          ENV_FILE: /opt/split-bill-web/.env
+          APP_URL: http://127.0.0.1:7771
+        run: |
+          set -euo pipefail
+
+          if [[ ! -r "${ENV_FILE}" ]]; then
+            echo "::error::Environment file not found or unreadable: ${ENV_FILE}"
+            exit 1
+          fi
+
+          IMAGE_TAG="${IMAGE_TAG}" docker compose \
+            --project-name split-bill-web \
+            --env-file "${ENV_FILE}" \
+            config --quiet
+
+          IMAGE_TAG="${IMAGE_TAG}" docker compose \
+            --project-name split-bill-web \
+            --env-file "${ENV_FILE}" \
+            up -d --no-build --remove-orphans
+
+          for attempt in {1..12}; do
+            if curl --fail --silent --show-error "${APP_URL}" >/dev/null; then
+              echo "Deployment healthy: ${APP_URL}"
+              exit 0
+            fi
+            sleep 5
+          done
+
+          echo "::error::Application health check failed"
+          IMAGE_TAG="${IMAGE_TAG}" docker compose \
+            --project-name split-bill-web \
+            --env-file "${ENV_FILE}" \
+            ps
+          IMAGE_TAG="${IMAGE_TAG}" docker compose \
+            --project-name split-bill-web \
+            --env-file "${ENV_FILE}" \
+            logs --tail=200 web
+          exit 1
+
+      - name: Remove branch CI image
+        if: github.ref != 'refs/heads/main' && always()
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: docker image rm "split-bill-web:${IMAGE_TAG}" || true
