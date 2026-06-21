@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Loader2, AlertCircle } from 'lucide-react';
+import { apiUrl } from '../utils/api';
 
 const OPENAI_MODEL = 'gpt-5-mini';
 
@@ -61,7 +62,7 @@ JSON format:
   "service": 500
 }`;
 
-        const response = await fetch('/api/receipt-ocr', {
+        const response = await fetch(apiUrl('/api/receipt-ocr'), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
