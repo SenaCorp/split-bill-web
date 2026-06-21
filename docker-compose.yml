@@ -3,7 +3,10 @@ version: '3.8'
 services:
   web:
     image: split-bill-web:${IMAGE_TAG:-latest}
-    build: .
+    build:
+      context: .
+      args:
+        APP_BASE_PATH: ${APP_BASE_PATH:-/}
     ports:
       - "7771:3000"
     environment:
@@ -18,4 +21,5 @@ services:
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
       - MINIO_BUCKET=${MINIO_BUCKET}
       - APP_BASE_URL=${APP_BASE_URL:-http://localhost:7771}
+      - APP_BASE_PATH=${APP_BASE_PATH:-/}
     restart: always

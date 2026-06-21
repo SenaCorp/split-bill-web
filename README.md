@@ -117,6 +117,19 @@ Use this option if you want to edit the code or run it without Docker.
 
 4. Open the link shown in the terminal, usually **http://localhost:5173**.
 
+
+### Serving from a path prefix
+
+If the app is published below a subpath such as `https://sena.my.id/split-bill`, configure the same prefix at build time and runtime:
+
+```bash
+export APP_BASE_PATH=/split-bill
+export APP_BASE_URL=https://sena.my.id/split-bill
+docker compose up -d --build
+```
+
+`APP_BASE_PATH` makes Vite emit prefixed asset URLs such as `/split-bill/assets/...` and lets the Express server return the built app for `/split-bill` routes. `APP_BASE_URL` controls the public bill links returned by the API.
+
 ## 📂 Project Structure
 
 ```text

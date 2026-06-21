@@ -1,13 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { Copy, MessageCircle } from 'lucide-react';
 import { formatCurrency } from '../utils/billCalculations';
-
-const currentOrigin = () => window.location.origin;
+import { appUrl } from '../utils/basePath';
 
 export default function SharePaymentLinks({ bill, paymentProofs = [], publicUrl, adminUrl, paymentInfo = [] }) {
   const [copyStatus, setCopyStatus] = useState('');
-  const basePublicUrl = publicUrl || `${currentOrigin()}/bill/${bill.id}`;
-  const resolvedAdminUrl = adminUrl || (bill.admin_token ? `${currentOrigin()}/bill/${bill.id}/admin/${bill.admin_token}` : '');
+  const basePublicUrl = publicUrl || appUrl(`/bill/${bill.id}`);
+  const resolvedAdminUrl = adminUrl || (bill.admin_token ? appUrl(`/bill/${bill.id}/admin/${bill.admin_token}`) : '');
 
   const links = useMemo(() => paymentProofs.map((proof) => ({
     personId: proof.person_id,

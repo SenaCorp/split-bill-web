@@ -3,9 +3,8 @@ import { MessageCircle, RefreshCcw, Save } from 'lucide-react';
 import PaymentTracker from './PaymentTracker';
 import SharePaymentLinks from './SharePaymentLinks';
 import { apiRequest } from '../utils/api';
+import { appUrl } from '../utils/basePath';
 import { calculateBillTotals, formatCurrency } from '../utils/billCalculations';
-
-const currentOrigin = () => window.location.origin;
 
 export default function BillSummary({ items, people, assignments, taxRate, serviceRate, discountAmount, paymentMethod, onReset }) {
   const [savedBill, setSavedBill] = useState(null);
@@ -27,7 +26,7 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
 
   const paymentLinks = useMemo(() => {
     if (!savedBill) return [];
-    const basePublicUrl = shareLinks.publicUrl || `${currentOrigin()}/bill/${savedBill.id}`;
+    const basePublicUrl = shareLinks.publicUrl || appUrl(`/bill/${savedBill.id}`);
     return paymentProofs.map((proof) => ({
       personId: proof.person_id,
       name: proof.person_name,
@@ -36,9 +35,9 @@ export default function BillSummary({ items, people, assignments, taxRate, servi
     }));
   }, [paymentProofs, savedBill, shareLinks.publicUrl]);
 
-  const publicBillUrl = savedBill ? (shareLinks.publicUrl || `${currentOrigin()}/bill/${savedBill.id}`) : '';
+  const publicBillUrl = savedBill ? (shareLinks.publicUrl || appUrl(`/bill/${savedBill.id}`)) : '';
   const adminBillUrl = savedBill
-    ? (shareLinks.adminUrl || (savedBill.admin_token ? `${currentOrigin()}/bill/${savedBill.id}/admin/${savedBill.admin_token}` : ''))
+    ? (shareLinks.adminUrl || (savedBill.admin_token ? appUrl(`/bill/${savedBill.id}/admin/${savedBill.admin_token}`) : ''))
     : '';
 
   const buildWhatsAppMessage = () => {
