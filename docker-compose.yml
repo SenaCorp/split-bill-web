@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   web:
+    image: split-bill-web:${IMAGE_TAG:-latest}
     build: .
     ports:
       - "7771:3000"
