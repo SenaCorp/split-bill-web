@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Split Bill Playwright Report</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #111937;
+      --panel-2: #182348;
+      --text: #eef3ff;
+      --muted: #a7b3d4;
+      --accent: #59e1b0;
+      --accent-2: #6da8ff;
+      --border: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(66, 211, 255, 0.18), transparent 24rem),
+        radial-gradient(circle at top right, rgba(255, 79, 154, 0.18), transparent 24rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 40px 20px 64px;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    .hero {
+      padding: 28px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+      backdrop-filter: blur(8px);
+    }
+
+    .hero h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+    }
+
+    .card h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .metric {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .meta {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section {
+      margin-top: 28px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    th, td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--panel-2);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .step {
+      padding: 16px 18px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .step strong {
+      color: var(--accent-2);
+    }
+
+    .artifacts a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .artifacts a:hover {
+      text-decoration: underline;
+    }
+
+    .screenshot {
+      margin-top: 16px;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .screenshot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <h1>Split Bill Playwright Report</h1>
+      <p>Live browser validation of the split bill flow on <code>http://localhost:7771</code> using the real <code>bill.jpeg</code> fixture and a 4-person split.</p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Status</h2>
+        <div class="metric">Passed</div>
+        <div class="meta">Flow completed through summary with live OCR.</div>
+      </article>
+      <article class="card">
+        <h2>Run Time</h2>
+        <div class="metric">2026-04-22</div>
+        <div class="meta">14:14:30 WIB</div>
+      </article>
+      <article class="card">
+        <h2>Grand Total</h2>
+        <div class="metric">453596.22</div>
+        <div class="meta">Subtotal 378000.00, Tax 37796.22, Service 37800.00</div>
+      </article>
+      <article class="card">
+        <h2>Browser Errors</h2>
+        <div class="metric">0</div>
+        <div class="meta">No Playwright-captured console errors in the successful run.</div>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Validated Flow</h2>
+      <div class="steps">
+        <div class="step"><strong>1.</strong> Opened <code>http://localhost:7771</code> in Playwright MCP.</div>
+        <div class="step"><strong>2.</strong> Uploaded the real workspace fixture <code>bill.jpeg</code> through the hidden file input.</div>
+        <div class="step"><strong>3.</strong> Observed live OCR processing and confirmed a real <code>POST /api/receipt-ocr</code> request.</div>
+        <div class="step"><strong>4.</strong> Verified extracted items and computed totals on the edit step.</div>
+        <div class="step"><strong>5.</strong> Added 4 people: <code>Alice</code>, <code>Bob</code>, <code>Carol</code>, <code>Dave</code>.</div>
+        <div class="step"><strong>6.</strong> Assigned all 8 single-quantity items so every item became valid.</div>
+        <div class="step"><strong>7.</strong> Reached the final summary and captured screenshot evidence.</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Receipt Extraction</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Cafe Americano</td><td>1</td><td>40000.00</td></tr>
+          <tr><td>Creme Brulee</td><td>1</td><td>59000.00</td></tr>
+          <tr><td>Butterscotch Latte</td><td>1</td><td>55000.00</td></tr>
+          <tr><td>Jasmine Latte</td><td>1</td><td>55000.00</td></tr>
+          <tr><td>Tiramisu Latte</td><td>1</td><td>55000.00</td></tr>
+          <tr><td>Banana Pudding</td><td>1</td><td>59000.00</td></tr>
+          <tr><td>Sea Salt Latte</td><td>1</td><td>55000.00</td></tr>
+          <tr><td>Ice Cup 16 oz</td><td>1</td><td>0.00</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">4-Person Split Result</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Person</th>
+            <th>Assigned Items</th>
+            <th>Subtotal</th>
+            <th>Fees</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Alice</td>
+            <td>
+              <ul>
+                <li>Cafe Americano</li>
+                <li>Tiramisu Latte</li>
+              </ul>
+            </td>
+            <td>95000.00</td>
+            <td>18999.05</td>
+            <td>113999.05</td>
+          </tr>
+          <tr>
+            <td>Bob</td>
+            <td>
+              <ul>
+                <li>Creme Brulee</li>
+                <li>Banana Pudding</li>
+              </ul>
+            </td>
+            <td>118000.00</td>
+            <td>23598.82</td>
+            <td>141598.82</td>
+          </tr>
+          <tr>
+            <td>Carol</td>
+            <td>
+              <ul>
+                <li>Butterscotch Latte</li>
+                <li>Sea Salt Latte</li>
+              </ul>
+            </td>
+            <td>110000.00</td>
+            <td>21998.90</td>
+            <td>131998.90</td>
+          </tr>
+          <tr>
+            <td>Dave</td>
+            <td>
+              <ul>
+                <li>Jasmine Latte</li>
+                <li>Ice Cup 16 oz</li>
+              </ul>
+            </td>
+            <td>55000.00</td>
+            <td>10999.45</td>
+            <td>65999.45</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section artifacts">
+      <h2 class="section-title">Artifacts</h2>
+      <p>Screenshot: <a href="./bill-jpeg-4p-summary.png">bill-jpeg-4p-summary.png</a></p>
+      <p>Fixture used: <a href="./bill.jpeg">bill.jpeg</a></p>
+      <div class="screenshot">
+        <img src="./bill-jpeg-4p-summary.png" alt="Split bill summary screenshot for 4 people" />
+      </div>
+    </section>
+  </main>
+</body>
+</html>

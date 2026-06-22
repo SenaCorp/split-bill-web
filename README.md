@@ -203,7 +203,12 @@ Browser code must not receive `SUPABASE_SERVICE_ROLE_KEY`, `MINIO_ACCESS_KEY`, o
 ### Supabase setup
 
 1. Create a Supabase project.
-2. Run the migration in `supabase/migrations/001_payment_tracking.sql` in the Supabase SQL editor or through the Supabase CLI.
+2. Run the migrations in `supabase/migrations/` in order through the Supabase SQL editor or Supabase CLI:
+
+   - `001_payment_tracking.sql`
+   - `002_enable_rls_payment_tracking.sql`
+
+   The second migration enables Row Level Security on `public.bills` and `public.payment_proofs`, blocks direct `anon`/`authenticated` table access, and keeps server-side access available through `service_role`. This is intentional: browser code must call the Express API, not Supabase tables directly.
 3. Copy your project URL and service role key into `.env`:
 
    ```bash
