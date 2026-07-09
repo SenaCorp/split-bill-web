@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { serverFetch } from './network.mjs';
 
 export const createSupabaseClient = () => {
   const supabaseUrl = process.env.SUPABASE_URL;
@@ -12,6 +13,9 @@ export const createSupabaseClient = () => {
     auth: {
       persistSession: false,
       autoRefreshToken: false
+    },
+    global: {
+      fetch: serverFetch
     }
   });
 };
