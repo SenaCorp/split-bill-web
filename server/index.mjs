@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createSupabaseClient } from './supabaseClient.mjs';
-import { createMinioClient, ensureProofBucket, minioBucket } from './minioClient.mjs';
+import { createMinioClient, ensureProofBucket, isIgnorableMinioError, minioBucket } from './minioClient.mjs';
 import { calculateBillTotals } from './billCalculator.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -225,9 +225,18 @@ app.post('/api/bills/:billId/payment-proofs/:personId/upload-url', asyncHandler(
   }
 
   const objectKey = `payment-proofs/${billId}/${personId}/${Date.now()}-${safeFileName(fileName)}`;
-  const uploadUrl = await minioClient.presignedPutObject(minioBucket, objectKey, 10 * 60);
 
-  return res.json({ uploadUrl, objectKey });
+  try {
+    const uploadUrl = await minioClient.presignedPutObject(minioBucket, objectKey, 10 * 60);
+    return res.json({ uploadUrl, objectKey });
+  } catch (error) {
+    if (isIgnorableMinioError(error)) {
+      console.warn(`Skipping MinIO proof upload URL because MinIO is unavailable or credentials are not authorized: ${error.message}`);
+      return sendError(res, 503, 'Payment proof upload is temporarily unavailable. Please contact the bill host.');
+    }
+
+    throw error;
+  }
 }));
 
 app.post('/api/bills/:billId/payment-proofs/:personId/complete', asyncHandler(async (req, res) => {
@@ -320,8 +329,17 @@ app.get('/api/payment-proofs/view-url', asyncHandler(async (req, res) => {
     return sendError(res, 400, 'Invalid proof object key.');
   }
 
-  const viewUrl = await minioClient.presignedGetObject(minioBucket, objectKey, 5 * 60);
-  return res.json({ viewUrl });
+  try {
+    const viewUrl = await minioClient.presignedGetObject(minioBucket, objectKey, 5 * 60);
+    return res.json({ viewUrl });
+  } catch (error) {
+    if (isIgnorableMinioError(error)) {
+      console.warn(`Skipping MinIO proof view URL because MinIO is unavailable or credentials are not authorized: ${error.message}`);
+      return sendError(res, 503, 'Payment proof preview is temporarily unavailable. Please try again later.');
+    }
+
+    throw error;
+  }
 }));
 
 app.use(express.static(distDir));
