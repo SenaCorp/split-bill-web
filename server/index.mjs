@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { createSupabaseClient } from './supabaseClient.mjs';
 import { createMinioClient, ensureProofBucket, isIgnorableMinioError, minioBucket } from './minioClient.mjs';
 import { calculateBillTotals } from './billCalculator.mjs';
+import { serverFetch } from './network.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -81,7 +82,7 @@ app.post('/api/receipt-ocr', asyncHandler(async (req, res) => {
     return sendError(res, 500, 'OPENAI_API_KEY is not configured on the server.');
   }
 
-  const response = await fetch('https://api.openai.com/v1/responses', {
+  const response = await serverFetch('https://api.openai.com/v1/responses', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${openAiApiKey}`,
