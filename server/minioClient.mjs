@@ -16,7 +16,10 @@ export const createMinioClient = () => {
   return new Client({ endPoint, port, useSSL, accessKey, secretKey });
 };
 
-const minioConnectionErrorCodes = new Set([
+const ignorableMinioErrorCodes = new Set([
+  'AccessDenied',
+  'InvalidAccessKeyId',
+  'SignatureDoesNotMatch',
   'ECONNREFUSED',
   'ECONNRESET',
   'EHOSTUNREACH',
@@ -24,10 +27,10 @@ const minioConnectionErrorCodes = new Set([
   'ETIMEDOUT'
 ]);
 
-const isMinioConnectionError = (error) => {
+export const isIgnorableMinioError = (error) => {
   if (!error) return false;
-  if (minioConnectionErrorCodes.has(error.code)) return true;
-  return error.cause ? isMinioConnectionError(error.cause) : false;
+  if (ignorableMinioErrorCodes.has(error.code)) return true;
+  return error.cause ? isIgnorableMinioError(error.cause) : false;
 };
 
 export const ensureProofBucket = async (client) => {
@@ -36,10 +39,11 @@ export const ensureProofBucket = async (client) => {
     if (!exists) {
       await client.makeBucket(minioBucket);
     }
+    return true;
   } catch (error) {
-    if (isMinioConnectionError(error)) {
-      console.warn(`Skipping MinIO bucket check because MinIO is unreachable: ${error.message}`);
-      return;
+    if (isIgnorableMinioError(error)) {
+      console.warn(`Skipping MinIO bucket check because MinIO is unavailable or credentials are not authorized: ${error.message}`);
+      return false;
     }
 
     throw error;
