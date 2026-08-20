@@ -149,9 +149,9 @@ function App() {
 
         <header className="hero-panel">
           <div>
-            <p className="hero-kicker">Shared expenses, without the guesswork</p>
-            <h1>{isRemoteBillRoute ? 'Your shared bill' : 'Split the bill. Keep it simple.'}</h1>
-            <p className="hero-tagline">Upload a receipt, review the items, assign each share, and settle up with a clear summary.</p>
+            <p className="hero-kicker">BarBa · Bayar Bagi</p>
+            <h1>{isRemoteBillRoute ? 'Tagihan bareng kamu' : 'Bayar bareng jadi gampang.'}</h1>
+            <p className="hero-tagline">Unggah struk, periksa daftar pesanan, tentukan bagian masing-masing, lalu bagikan rincian tagihan dengan jelas.</p>
           </div>
           <div className="hero-orbit" aria-hidden="true">
             <span className="orbit-ring" />
