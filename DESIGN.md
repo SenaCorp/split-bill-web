@@ -1,262 +1,255 @@
 ## Overview
 
-Clay.com is the most playful B2B SaaS interface in the GTM-data category. The base atmosphere is **cream-tinted white canvas** (`{colors.canvas}` — #fffaf0) holding dark-navy ink type and **3D-rendered claymation illustrations** (mountains, mascot characters, peach/ochre/lavender landscapes) as the dominant brand voltage. Where most data-platform brands play it cool with grids and gradients, Clay leans hard into hand-crafted-looking 3D illustrations and saturated single-color feature cards.
+Cohere's current web presence feels like a sober enterprise AI command center with editorial restraint. The home page opens on a huge typographic declaration over a white canvas, then uses photography, dark product mockups, trust logos, and generous empty space to make AI infrastructure feel controlled rather than speculative. Product pages invert the tone into deep green-black or dark navy bands, while blog and research pages move toward publishing-system clarity: large filters, thin rules, dense lists, and pale technical backgrounds.
 
-Type voice runs **Plain Black** (or substituted with Inter weight 500-600) — a custom rounded display face used at very large sizes (72px hero) with negative letter-spacing. Body type uses Inter at standard weights. The display weight stays at 500, never bolder — the rounded character of the typeface gives it warmth without needing weight.
-
-Component voltage comes from **saturated single-color feature cards** in a 6-color palette: hot pink, deep teal, lavender, peach, ochre, and cream-card. Each card shows product UI fragments at small scale — Claygent agent runs, sequencer flows, CRM enrichment outputs. The colored card IS the primary visual element on every long-scroll page.
+What makes the system distinctive is the mix of austere black-and-white UI with bursts of tactile brand imagery. The site avoids decorative chrome in the normal interface; color arrives through photography, abstract 3D media, coral blog taxonomy chips, blue research links, and dark product environments. Cards are rounded but not cute. Type is large, tight, and almost monospaced in spirit, creating a research-lab cadence across marketing, product, and editorial surfaces.
 
 **Key Characteristics:**
-- Cream-tinted white canvas (`{colors.canvas}` — #fffaf0). The warmth differentiates Clay from cool-gray competitor sites.
-- Dark navy/black primary CTAs (`{colors.primary}` — #0a0a0a). Buttons rounded `{rounded.md}` (12px) — friendly modern but not pill.
-- 6-color saturated feature card palette: `{colors.brand-pink}`, `{colors.brand-teal}`, `{colors.brand-lavender}`, `{colors.brand-peach}`, `{colors.brand-ochre}`, `{colors.surface-card}` (cream).
-- 3D claymation illustrations (mountains, characters, abstract shapes) as full-bleed hero artifacts — the brand's most-recognized visual element.
-- Custom rounded Plain Black display typeface at 500 weight with -1 to -2.5px letter-spacing on display sizes.
-- Border radius is generous: `{rounded.md}` (12px) for buttons + inputs, `{rounded.lg}` (16px) for content cards, `{rounded.xl}` (24px) for feature cards. The bigger radius matches the rounded display type's character.
-- Product UI fragments embedded inside colored cards at small scale — agent run logs, sequencer flows, enrichment results.
-- Section rhythm `{spacing.section}` (96px) between major bands.
-- Footer is cream-tinted (`{colors.surface-soft}`) — Clay does NOT use a dark footer. Even the closing band stays warm-light.
+- Monumental display headlines with very tight line height and negative tracking.
+- White editorial canvases interrupted by deep green, dark navy, and image-led CTA bands.
+- Rounded media cards and product cards, usually 8px to 22px.
+- Pill CTAs in near-black or white, with most secondary actions rendered as underlined text links.
+- Trust-logo strips with monochrome partner marks and very wide vertical spacing.
+- Agent-console mockups using dark panels, small status chips, and product integration badges.
+- Blog and research surfaces with prominent taxonomy chips, long rule-separated lists, and search fields.
 
 ## Colors
 
 ### Brand & Accent
-- **Primary** (`{colors.primary}` — #0a0a0a): All primary CTAs, h1/h2 ink type. Near-black with slight warmth.
-- **Brand Pink** (`{colors.brand-pink}` — #ff4d8b): Hot-pink feature card surface. Sequencer / outbound feature pages.
-- **Brand Teal** (`{colors.brand-teal}` — #1a3a3a): Deep teal-green feature card. Often the featured pricing tier.
-- **Brand Lavender** (`{colors.brand-lavender}` — #b8a4ed): Soft lavender feature card.
-- **Brand Peach** (`{colors.brand-peach}` — #ffb084): Warm peach feature card.
-- **Brand Ochre** (`{colors.brand-ochre}` — #e8b94a): Mustard / ochre feature card and illustration accents.
-- **Brand Mint** (`{colors.brand-mint}` — #a4d4c5): Mint accent on illustrations and small badges.
-- **Brand Coral** (`{colors.brand-coral}` — #ff6b5a): Coral accent for highlights.
 
-### Surface
-- **Canvas** (`{colors.canvas}` — #fffaf0): The default page floor. Cream-tinted white.
-- **Surface Soft** (`{colors.surface-soft}` — #faf5e8): Footer and CTA-band background.
-- **Surface Card** (`{colors.surface-card}` — #f5f0e0): Cream feature cards, testimonial cards.
-- **Surface Strong** (`{colors.surface-strong}` — #ebe6d6): Stronger cream for emphasized bands.
-- **Surface Dark** (`{colors.surface-dark}` — #0a1a1a): Dark teal-tinted near-black for occasional dark cards (rare).
-- **Surface Dark Elevated** (`{colors.surface-dark-elevated}` — #1a2a2a): Elevated dark cards.
-- **Hairline** (`{colors.hairline}` — #e5e5e5): 1px borders on cards and inputs.
+- **Cohere Black** (`#000000`): Announcement bar, highest-contrast text, and the global brand anchor.
+- **Near-Black Primary** (`#17171c`): Primary CTA buttons, dark footer, and deep UI cards.
+- **Deep Enterprise Green** (`#003c33`): Product hero bands for North and Command-style dark sections.
+- **Dark Navy** (`#071829`): Financial-services and security-oriented solution bands.
+- **Action Blue** (`#1863dc`): Editorial links, pagination, and secondary action emphasis.
+- **Coral** (`#ff7759`): Blog category chips, taxonomy outlines, and warm product markers.
+- **Soft Coral** (`#ffad9b`): Pale chip borders and segmented article-label details.
 
-### Text
-- **Ink** (`{colors.ink}` — #0a0a0a): Headlines and primary text.
-- **Body Strong** (`{colors.body-strong}` — #1a1a1a): Emphasized body, lead paragraphs.
-- **Body** (`{colors.body}` — #3a3a3a): Default running-text.
-- **Muted** (`{colors.muted}` — #6a6a6a): Sub-headings, breadcrumbs, footer body.
-- **Muted Soft** (`{colors.muted-soft}` — #9a9a9a): Captions, fine-print.
-- **On Primary / On Dark** (`{colors.on-primary}` — #ffffff): Text on primary buttons + dark feature cards (teal).
+### Surface & Background
+
+- **Canvas White** (`#ffffff`): Dominant page background and form/card surface.
+- **Soft Stone** (`#eeece7`): Product cards, testimonial placeholders, and warm neutral surface blocks.
+- **Pale Green Wash** (`#edfce9`): North page section backdrop behind stacked dark capability panels.
+- **Pale Blue Wash** (`#f1f5ff`): Blog CTA surface behind abstract 3D imagery.
+- **Card Border** (`#f2f2f2`): Softest card containment line.
+
+### Text & Rules
+
+- **Ink** (`#212121`): Default body text and most link text on light backgrounds.
+- **Muted Slate** (`#93939f`): Footer links, dates, metadata, and de-emphasized labels.
+- **Slate** (`#75758a`): Research separators and tertiary text.
+- **Hairline** (`#d9d9dd`): Standard list rules and section dividers.
+- **Border Light** (`#e5e7eb`): Secondary divider and utility rule.
 
 ### Semantic
-- **Success** (`{colors.success}` — #22c55e): Success states.
-- **Warning** (`{colors.warning}` — #f59e0b): Warning callouts.
-- **Error** (`{colors.error}` — #ef4444): Validation errors.
+
+- **Focus Blue** (`#4c6ee6`): Keyboard focus and ring color.
+- **Form Focus Violet** (`#9b60aa`): Focus border for text inputs.
+- **Error Red** (`#b30000`): Extracted ring/shadow color associated with validation-like states.
+
+### Gradient System
+
+Cohere does not use gradients as a generic UI fill. Gradients and color fields are media-led: abstract 3D hero imagery, deep blue open-science particle fields, red-orange product video posters, and dark green-to-black product environments. Keep UI surfaces flat; reserve gradient richness for large media panels and CTA image bands.
 
 ## Typography
 
 ### Font Family
-The system runs **Plain Black** (a custom rounded display face) for headlines and **Inter** for body, navigation, and UI. Plain Black at weight 500 with negative letter-spacing handles every display headline; Inter handles the rest. The fallback stack walks `Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif` for both.
+
+- **Display**: `CohereText`, falling back to `Space Grotesk`, `Inter`, `ui-sans-serif`, and `system-ui`.
+- **Body/UI**: `Unica77 Cohere Web`, falling back to `Inter`, `Arial`, `ui-sans-serif`, and `system-ui`.
+- **Technical labels**: `CohereMono`, falling back to `Arial`, `ui-sans-serif`, and `system-ui`.
+- **Icons**: Cohere uses custom icon fonts and thin-line geometric illustrations.
 
 ### Hierarchy
 
-| Token | Size | Weight | Line Height | Letter Spacing | Use |
-|---|---|---|---|---|---|
-| `{typography.display-xl}` | 72px | 500 | 1.0 | -2.5px | Homepage h1 ("Go to market with unique data") — Plain Black |
-| `{typography.display-lg}` | 56px | 500 | 1.05 | -2px | Section heads — Plain Black |
-| `{typography.display-md}` | 40px | 500 | 1.1 | -1px | Sub-section heads, product names |
-| `{typography.display-sm}` | 32px | 500 | 1.15 | -0.5px | CTA-band heads, feature card titles |
-| `{typography.title-lg}` | 24px | 600 | 1.3 | -0.3px | Pricing plan names, larger feature titles |
-| `{typography.title-md}` | 18px | 600 | 1.4 | 0 | Card titles, intro paragraphs |
-| `{typography.title-sm}` | 16px | 600 | 1.4 | 0 | Small card titles, list labels |
-| `{typography.body-md}` | 16px | 400 | 1.55 | 0 | Default running-text |
-| `{typography.body-sm}` | 14px | 400 | 1.55 | 0 | Footer body, fine-print |
-| `{typography.caption}` | 13px | 500 | 1.4 | 0 | Badge labels, captions |
-| `{typography.caption-uppercase}` | 12px | 600 | 1.4 | 1.5px | Section labels, "FEATURED" badges |
-| `{typography.button}` | 14px | 600 | 1.0 | 0 | Standard button labels |
-| `{typography.nav-link}` | 14px | 500 | 1.4 | 0 | Top-nav menu items |
+| Role | Font | Size | Weight | Line Height | Letter Spacing | Notes |
+|---|---|---:|---:|---:|---:|---|
+| Hero Display | CohereText | 96px | 400 | 1.00 | -1.92px | Home page declaration scale. |
+| Product Display | CohereText | 72px | 400 | 1.00 | -1.44px | Product and research hero headlines. |
+| Section Display | Unica77 | 60px | 400 | 1.00 | -1.2px | Large product-page headings. |
+| Section Heading | Unica77 | 48px | 400 | 1.20 | -0.48px | Split hero and CTA headings. |
+| Card Heading | Unica77 | 32px | 400 | 1.20 | -0.32px | Feature card and list section titles. |
+| Feature Heading | Unica77 | 24px | 400 | 1.30 | 0 | Cards, filters, and article titles. |
+| Body Large | Unica77 | 18px | 400 | 1.40 | 0 | Lead text and larger paragraphs. |
+| Body | Unica77 | 16px | 400 | 1.50 | 0 | Default copy and link text. |
+| Button | Unica77 | 14px | 500 | 1.71 | 0 | Compact CTA labels. |
+| Caption | Unica77 | 14px | 400 | 1.40 | 0 | Metadata and small explanatory text. |
+| Mono Label | CohereMono | 14px | 400 | 1.40 | 0.28px | Uppercase technical labels. |
+| Micro | Unica77 | 12px | 400 | 1.40 | 0 | Footer, nav microcopy, and small links. |
 
 ### Principles
-Plain Black at weight 500 + negative letter-spacing IS the brand voice. Going to weight 700 reads as bombastic; the rounded character of the typeface adds warmth that bolder weight would flatten.
 
-The body-vs-display split is functional: Plain Black for Plain Black moments (headlines), Inter for everything else (running text, UI, buttons). Mixing them is a system violation.
-
-### Note on Font Substitutes
-If Plain Black is unavailable, **Inter** at weight 500 with -0.05em letter-spacing is a usable approximation. **Söhne Breit** at weight Buch is an alternative if licensed. **Recoleta** at weight 500 carries similar rounded-display warmth.
+- Use massive type sparingly; Cohere pages often have one oversized headline and then settle into restrained 16px-24px UI copy.
+- Keep display type tight. Hero copy should feel compact and carved, not airy.
+- Avoid heavy bold weights. Size, spacing, and surface contrast do most of the hierarchy work.
+- Use uppercase mono labels for category and system markers, especially on product and research pages.
+- Editorial pages can use coral chips and blue links, but the base typography remains black and measured.
 
 ## Layout
 
 ### Spacing System
-- **Base unit:** 4px.
-- **Tokens:** `{spacing.xxs}` 4px · `{spacing.xs}` 8px · `{spacing.sm}` 12px · `{spacing.md}` 16px · `{spacing.lg}` 24px · `{spacing.xl}` 32px · `{spacing.xxl}` 48px · `{spacing.section}` 96px.
-- **Section padding:** `{spacing.section}` (96px) between major editorial bands.
-- **Card internal padding:** `{spacing.xl}` (32px) for feature cards and pricing tiers; `{spacing.lg}` (24px) for testimonial and product mockup cards.
+
+The system uses an 8px base with many one-off alignment values: `2px`, `6px`, `8px`, `10px`, `12px`, `16px`, `20px`, `22px`, `24px`, `28px`, `32px`, `36px`, `40px`, `56px`, `60px`, `64px`, and `80px`.
+
+Large sections rely on dramatic vertical breathing room. The home page places a trust-logo strip far below the hero media. Product pages often hold dark panels inside fields of empty white space, then transition to dense forms or footers only near the end.
 
 ### Grid & Container
-- **Max content width:** ~1280px centered.
-- **Editorial body:** Single 12-column grid; hero often uses 7/5 split (h1 left, illustration right).
-- **Feature card grids:** 3-up at desktop, 2-up at tablet, 1-up at mobile.
-- **Pricing grid:** 3-4 up at desktop, 1-up at mobile.
+
+- Global nav uses a three-zone layout: logo left, menu centered, sign-in/CTA right.
+- Home hero is centered text above a two-card media composition: a wide product mockup card beside a narrower photography card.
+- Feature sections commonly use 3-column cards on desktop.
+- Product pages alternate centered hero blocks, trust-logo strips, large single-feature bands, and 2- or 3-column card grids.
+- Research pages use full-width lists with date and chip columns instead of decorative cards.
+- Forms use two-column input rows inside a rounded white card on dark or stone section backgrounds.
 
 ### Whitespace Philosophy
-Clay uses generous whitespace around big rounded display headlines and saturated feature cards. The cream canvas + colored cards + 3D illustrations create a playful warmth that competing data-platform sites lack.
+
+Cohere uses whitespace as a trust signal. Large empty intervals separate the brand claim, customer proof, product proof, and CTA. Dense content appears only where it serves the information architecture: research paper rows, blog card grids, and contact form fields.
 
 ## Elevation & Depth
 
+Cohere is mostly flat. Depth comes from surface alternation, media contrast, rounded corners, and thin borders rather than drop shadows.
+
 | Level | Treatment | Use |
 |---|---|---|
-| Flat | No shadow, no border | Body sections, top nav, hero |
-| Soft hairline | 1px `{colors.hairline}` border | Inputs, small content cards |
-| Saturated card | Brand pink/teal/lavender/peach/ochre fill — no shadow | Feature cards |
-| Cream card | `{colors.surface-card}` background — no shadow | Testimonial, secondary cards |
-| Subtle drop shadow | Faint shadow at low alpha | Hover-elevated states (rare) |
-
-The system uses no heavy shadows. Depth comes from the saturated color contrast between cream canvas and bright feature cards.
-
-### Decorative Depth
-- **3D claymation illustrations** — mountains, characters, mascots rendered in a hand-crafted 3D style. The brand's most-recognized depth element. Not a token — these are illustrated assets.
-- **Mascot characters** appear as inline figures in feature cards and CTAs.
+| Flat | No shadow, white or dark field | Hero copy, research lists, editorial surfaces |
+| Bordered | 1px `#d9d9dd`, `#e5e7eb`, or dark translucent rules | Research rows, forms, pale cards, footer inputs |
+| Media Lift | Rounded image or video over contrasting section color | Hero photo cards, product videos, CTA imagery |
+| Dark Product Field | Deep green or navy full-width band | Command, North, financial services, security sections |
 
 ## Shapes
 
-### Border Radius Scale
+### Radius Scale
 
-| Token | Value | Use |
-|---|---|---|
-| `{rounded.xs}` | 6px | Small badges, dropdown items |
-| `{rounded.sm}` | 8px | Small buttons, hairline-border accent |
-| `{rounded.md}` | 12px | Standard CTA buttons, text inputs |
-| `{rounded.lg}` | 16px | Content cards, testimonial cards, pricing tiers |
-| `{rounded.xl}` | 24px | Feature cards (the saturated brand-color cards) |
-| `{rounded.pill}` | 9999px | Category tabs, badge pills |
-| `{rounded.full}` | 9999px / 50% | Avatars, icon buttons |
+| Token | Value | Role |
+|---|---:|---|
+| `xs` | 4px | Small images, search fields, article thumbnails, utility elements |
+| `sm` | 8px | Blog chips, cards, small media, dialogs |
+| `md` | 16px | Medium product cards and grouped blocks |
+| `lg` | 22px | Signature media-card and soft placeholder radius |
+| `xl` | 30px | Research/topic filter pills |
+| `pill` | 32px | Primary CTA buttons |
+| `full` | 9999px | Round status elements and fully pill-shaped controls |
+
+### Image Treatment
+
+Images are not decorative backdrops for text except in CTA bands. Most imagery sits as rounded cards with visible corners: product videos, enterprise photography, article thumbnails, and abstract 3D renders. The dominant radii are 8px and 22px.
 
 ## Components
 
-### Top Navigation
+### **`button-primary`**
 
-**`top-nav`** — Cream nav bar pinned to top. 64px tall, `{colors.canvas}` background. Carries the Clay logo + wordmark at left, primary horizontal menu (Product, Solutions, Resources, Pricing, Customers) center, right-side cluster with "Sign in" + "Try free" `{component.button-primary}`. Menu items in `{typography.nav-link}` (Inter 14px / 500).
+Near-black or white pill CTA, depending on surface contrast. Uses 14px-16px Unica77, 12px 24px padding, and a 32px pill radius. This is the primary action style for "Request a demo", "Submit", and hero CTAs.
 
-### Buttons
+### **`button-secondary`**
 
-**`button-primary`** — Background `{colors.primary}` (near-black), text `{colors.on-primary}` (white), type `{typography.button}` (Inter 14px / 600), padding 12px × 20px, height 44px, rounded `{rounded.md}` (12px).
+Text-only action link, usually underlined or rule-aligned, with no filled background. Used for "Explore products", "Try the Playground", newsletter signup, and secondary hero actions.
 
-**`button-secondary`** — Cream button with hairline outline. Background `{colors.canvas}`, text `{colors.ink}`, 1px hairline border.
+### **`button-pill-outline`**
 
-**`button-on-color`** — White button used over saturated brand-color feature cards. Same shape as primary but inverted (white background, ink text).
+Outlined pill control with transparent fill, 1px dark border, and 30px radius. Used for research filters, topic tags, and lightweight taxonomy controls.
 
-**`button-text-link`** — Inline text button, no background. Used for "Sign in" and inline link CTAs.
+### **`announcement-bar`**
 
-**`text-link`** — Inline body links in `{colors.ink}` with underline.
+Full-width black strip above the nav, 36px tall, centered microcopy with an underlined "Learn more" link and a close control at the far right.
 
-### Cards & Containers
+### **`hero-photo-card`**
 
-**`hero-band`** — Cream-canvas hero with 7-5 grid: h1 + sub-headline + button row on the left, 3D claymation illustration on the right. Vertical padding `{spacing.section}` (96px).
+Rounded media card used in the home hero and solution pages. It combines photography or abstract imagery with an overlaid dark agent-console module. Radius is usually 22px on large cards and 8px on smaller thumbnails.
 
-**`hero-illustration-card`** — Right-side artifact holding 3D claymation illustration (mountains, mascot character, abstract shapes). Background `{colors.surface-soft}`, rounded `{rounded.xl}` (24px). The illustration IS the artifact.
+### **`agent-console-card`**
 
-**`feature-card-pink`** / **`feature-card-teal`** / **`feature-card-lavender`** / **`feature-card-peach`** / **`feature-card-ochre`** — Saturated single-color feature cards. Background varies per variant; rounded `{rounded.xl}` (24px); padding `{spacing.xl}` (32px). Each card carries an h3 in `{typography.title-md}`, a body description, and a product UI fragment or mascot illustration. Text color flips to `{colors.on-dark}` (white) on pink and teal cards, `{colors.ink}` (dark) on lavender/peach/ochre cards (the lighter saturations have enough contrast for dark text).
+Dark product mockup panel showing agent names, status chips, integration badges, prompt fields, and generated response cards. Background is near-black, text is white or muted, and small accent chips use product colors.
 
-**`feature-card-cream`** — Lower-key feature card variant on `{colors.surface-card}`. Used for less-emphasized features that don't warrant a saturated color.
+### **`trust-logo-strip`**
 
-**`product-mockup-card`** — Card showing actual Clay product UI (Claygent agent runs, sequencer flows, CRM enrichment tables). Background `{colors.canvas}` with hairline border, rounded `{rounded.lg}`, padding `{spacing.lg}` (24px).
+Centered copy above a row of monochrome customer logos. It is intentionally quiet: no cards, no borders, just large horizontal spacing and black or white logos depending on the background.
 
-**`testimonial-card`** — Customer quote cards. Background `{colors.surface-card}` (cream), rounded `{rounded.lg}`, padding `{spacing.lg}` (24px). Top row has avatar + name + role; below sits the testimonial in `{typography.body-md}`.
+### **`capability-card`**
 
-**`pricing-tier-card`** — Standard tier card. Background `{colors.canvas}` with hairline, rounded `{rounded.lg}`, padding `{spacing.xl}` (32px).
+Content block with thin-line geometric illustration, 24px heading, body copy, and a text link. On light backgrounds, cards often have only a top rule or a subtle image/card relationship rather than full boxing.
 
-**`pricing-tier-card-featured`** — The featured tier flips to `{colors.brand-teal}` (deep teal-green). The teal surface IS the featured signal.
+### **`dark-feature-band`**
 
-**`expert-card`** — Used on /experts page. Background `{colors.canvas}` with hairline, rounded `{rounded.lg}`, padding `{spacing.lg}`. Carries an avatar at top, expert name, specialization, and a "Book session" link.
+Deep green or navy full-width section used for product capabilities, security claims, and feature breakdowns. Text turns white; cards use darker translucent surfaces, pale borders, and abstract line illustrations.
 
-### Inputs & Forms
+### **`product-card`**
 
-**`text-input`** — Background `{colors.canvas}`, text `{colors.ink}`, type `{typography.body-md}`, rounded `{rounded.md}` (12px), padding 12px × 16px, height 44px. 1px hairline border.
+Warm stone card used for product/model summaries. Typically 3-column on desktop, with 8px radius, generous padding, a small pill button, a divider line, and checkmark bullet rows.
 
-**`text-input-focused`** — Border thickens to ink for emphasis.
+### **`blog-filter-chip`**
 
-### Tabs / Badges
+Large coral taxonomy chip used on the blog index. Active chips invert to coral fill with dark text; inactive chips use coral outline and pale fill. Typography is oversized relative to typical filters, making the taxonomy a hero-level control.
 
-**`category-tab`** + **`category-tab-active`** — Pill-shaped tabs in sub-nav. Inactive: transparent + muted text. Active: cream-card background + ink text. Padding 8px × 16px.
+### **`research-table`**
 
-**`badge-pill`** — Small cream-fill pill labels in `{typography.caption}` (13px / 500), rounded `{rounded.pill}`.
+Rule-separated publication list with title left, topic pills centered, and date right. Rows are tall, white, and border-driven; filters above use many compact outlined pills.
 
-### CTA / Footer
+### **`contact-form-card`**
 
-**`cta-band-illustrated`** — Pre-footer "Turn your growth ideas into reality today" band. Background `{colors.surface-soft}`, rounded `{rounded.xl}`, padding 80px. Carries an h2 in `{typography.display-md}`, a sub-line, and a `{component.button-primary}` — usually paired with a 3D illustration of a mascot or scene.
+Rounded white form panel set against dark green or warm stone sections. Inputs are rectangular with thin gray borders, 12px-16px padding, and compact labels/placeholders. Submit uses the same near-black pill style as primary CTAs.
 
-**`footer`** — Cream-tinted footer (NOT dark navy unlike most SaaS sites). Background `{colors.surface-soft}`, text `{colors.body}`. 4-column link list. Vertical padding 80px. Often features a horizon-style 3D mountain illustration at the very bottom — Clay's signature footer mountain.
+### **`footer-newsletter`**
+
+Dark footer subscription block with coral "AI moves fast" label, white headline, muted legal microcopy, a single-line email field, and arrow submit marker. Footer columns use white section labels and muted links.
 
 ## Do's and Don'ts
 
 ### Do
-- Anchor every page on the cream canvas (`{colors.canvas}` — #fffaf0). The warm tint differentiates Clay from cool-gray data sites.
-- Use 3D claymation illustrations as hero artifacts. Hand-crafted 3D characters and mountains ARE the brand.
-- Cycle saturated feature cards across the page — pink → teal → lavender → peach → ochre → cream. Repeating the same color twice in a row reads as off-rhythm.
-- Use Plain Black at weight 500 with negative letter-spacing on every display headline.
-- Show product UI fragments inside saturated feature cards. The brand voltage is product-driven, not abstract.
-- Use cream footer (NOT dark). Clay deliberately closes pages with warm cream rather than the standard dark-footer SaaS template.
-- Anchor every band with `{spacing.section}` (96px) vertical rhythm.
+
+- Use white canvas as the default surface; introduce dark green or navy as full-width product bands.
+- Keep primary CTAs pill-shaped and near-black on light surfaces.
+- Use 22px radius on major media cards and placeholders.
+- Use coral for editorial taxonomy and small warm accents, not as the main CTA system.
+- Use monochrome trust logos with wide spacing.
+- Use thin-line geometric illustrations for research and capability icons.
+- Let photography and product mockups carry color, while the UI shell stays restrained.
 
 ### Don't
-- Don't use cool grays for canvas. The cream tint is non-negotiable.
-- Don't use a 7th brand-color card. The 6-color palette is saturated enough.
-- Don't bold display weight beyond 500. Plain Black at 700 reads as bombastic.
-- Don't repeat the same brand-color card twice in a row.
-- Don't replace claymation illustrations with flat vector art. The hand-crafted 3D character IS the brand voice.
-- Don't use a dark footer. The cream footer is part of the system's warm-throughout pacing.
-- Don't add hover state styling beyond what the system already encodes.
+
+- Do not turn coral or blue into broad decorative surface colors.
+- Do not add heavy drop shadows to cards.
+- Do not make every section card-based; Cohere often uses unframed rows, rules, and open space.
+- Do not use rounded cards below 8px for major media.
+- Do not replace the display/body type split with one generic sans-serif voice.
+- Do not render undocumented interaction variants in documentation or previews.
+- Do not use saturated gradients as normal UI backgrounds; keep gradients media-led.
 
 ## Responsive Behavior
 
 ### Breakpoints
 
 | Name | Width | Key Changes |
-|---|---|---|
-| Mobile | < 768px | Hamburger nav; hero h1 72→36px; hero-illustration-card stacks below; feature grids 1-up; pricing 1-up |
-| Tablet | 768–1024px | Top nav tightens; feature cards 2-up; pricing 2-up |
-| Desktop | 1024–1440px | Full top-nav; 3-up feature cards; 3-up pricing tiers |
-| Wide | > 1440px | Same as desktop with more breathing room; max content 1280px |
+|---|---:|---|
+| Small Mobile | <425px | Single-column cards, compact nav, reduced hero headline scale |
+| Mobile | 425-640px | Hero media stacks, card grids become one column, form rows stack |
+| Large Mobile | 640-768px | Wider one-column layouts with larger media cards |
+| Tablet | 768-1024px | Two-column cards begin, nav spacing tightens |
+| Desktop | 1024-1440px | Full nav, 3-column card grids, split hero compositions |
+| Large Desktop | 1440-2560px | Wide containers and large empty vertical intervals |
 
 ### Touch Targets
-- `{component.button-primary}` at minimum 44 × 44px (matches WCAG AAA).
-- `{component.text-input}` height is 44px.
+
+Primary CTAs and pills meet comfortable touch sizing through 12px-24px padding and pill radii. Research filter chips and blog category chips are larger than standard tags, making dense taxonomy surfaces usable on touch devices.
 
 ### Collapsing Strategy
-- Top nav collapses to hamburger at < 768px.
-- Hero 7-5 grid → single-column on mobile.
-- Feature card grids reduce columns rather than scaling.
-- Saturated feature cards retain their colored fill at every breakpoint.
-- Pricing tier cards collapse 4 → 2 → 1.
+
+- Nav collapses from full horizontal links to a compact mobile menu.
+- Hero media moves from split cards to stacked cards.
+- Product and capability grids collapse from 3 columns to 2 and then 1.
+- Form fields collapse from paired rows to a single column.
+- Research rows preserve their rule-separated structure but stack metadata below titles on smaller widths.
 
 ## Iteration Guide
 
-1. Focus on ONE component at a time. Reference its YAML key (`{component.feature-card-pink}`, `{component.pricing-tier-card-featured}`).
-2. Pick the right brand-color card for the feature: pink for outbound/sequencer, teal for enterprise/featured, lavender for AI-agent products, peach for general SaaS warmth, ochre for community / experts.
-3. Variants of an existing component (`-active`, `-disabled`) live as separate entries.
-4. Use `{token.refs}` everywhere — never inline hex.
-5. Never document hover.
-6. Display headlines stay Plain Black 500 with negative letter-spacing. Body stays Inter 400.
-7. The cream-throughout palette is a system contract — don't add a dark footer.
+1. Start from a white canvas or a full-width dark green/navy band; avoid mid-tone page backgrounds unless the screenshot shows a specific CTA/form section.
+2. Use `button-primary` for the single highest-priority action and `button-secondary` for the companion action.
+3. Use `hero-photo-card` or `agent-console-card` when a page needs visual energy; avoid invented dashboard data.
+4. For editorial pages, combine `blog-filter-chip`, `button-pill-outline`, and `research-table` instead of generic marketing cards.
+5. Keep component examples structurally honest: placeholder product frames are better than invented product content.
 
 ## Known Gaps
 
-- Plain Black is licensed to Clay and not available as a public web font; Inter weight 500 with negative letter-spacing is the closest substitute.
-- 3D claymation illustrations are commissioned assets, not system tokens — they're rendered per-page.
-- The mascot characters (named characters that recur across the site) are illustrated assets; their exact lineage and naming are not formalized in tokens.
-- Animation and transition timings (3D illustration parallax on scroll, feature card entrance animations) are not in scope.
-- Form validation states beyond `{component.text-input-focused}` are not extracted.
-- The actual Clay product surface (in-app data tables, formula editor, agent builder) shares some tokens with the marketing site but adds many product-specific components that are out of scope.
-
-## Mobile Web Compatibility Notes
-
-This template applies the Clay-inspired system to a mobile web portal context, so the playful visual language must stay usable on small screens.
-
-- Keep the cream canvas on every viewport, including mobile.
-- Collapse hero grids to one column below 768px.
-- Keep hero headings readable with a minimum size around 36px and controlled line height.
-- Stack saturated feature cards one per row on mobile.
-- Keep all primary buttons and form controls at least 44px tall.
-- Use full-width primary actions on narrow screens when actions would otherwise wrap awkwardly.
-- Preserve generous card radius, but reduce internal padding from 32px to 20px on mobile.
-- Avoid horizontal page overflow. Tables may scroll inside their own container, but the page itself should not.
-- Keep product mockup fragments simplified on mobile so text and controls do not overlap.
-- Use cream or saturated surfaces for mobile cards rather than cool gray panels.
+- Exact proprietary font files are not bundled; use the documented fallbacks when implementing externally.
+- Mobile screenshots were not regenerated in this public update, so mobile behavior is documented from the desktop system and existing responsive patterns.
+- Some live pages lazy-load content blocks late; blank testimonial placeholders are documented as placeholder skeleton surfaces rather than filled testimonial cards.
