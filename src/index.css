@@ -114,7 +114,7 @@ input[type="search"] {
 }
 
 .console-shell {
-  width: min(100%, 830px);
+  width: min(100%, 1180px);
   margin: 0 auto;
   color: var(--ink);
   background:
@@ -1206,12 +1206,15 @@ input[type="file"].visually-hidden {
 
 @media (max-width: 760px) {
   .app-page {
-    padding: 10px;
+    padding: 0;
   }
 
   .console-shell {
     clip-path: none;
-    padding: 8px;
+    min-height: 100dvh;
+    padding: 6px;
+    border-width: 0;
+    box-shadow: none;
   }
 
   .masthead,
@@ -1240,6 +1243,14 @@ input[type="file"].visually-hidden {
     gap: 6px;
   }
 
+  .logo-pill {
+    flex: 0 0 auto;
+  }
+
+  .brand-tagline {
+    align-self: center;
+  }
+
   .content-grid {
     grid-template-columns: 1fr;
   }
@@ -1264,6 +1275,11 @@ input[type="file"].visually-hidden {
   .upload-label {
     flex-direction: column;
     text-align: center;
+  }
+
+  .upload-plate {
+    margin: 8px;
+    padding: 18px 12px;
   }
 
   .flow-header,
@@ -1294,6 +1310,14 @@ input[type="file"].visually-hidden {
   .item-actions {
     width: 100%;
     justify-content: flex-end;
+  }
+
+  .flow-actions {
+    flex-wrap: wrap;
+  }
+
+  .flow-actions > button {
+    flex: 1 1 150px;
   }
 }
 
