@@ -129,9 +129,9 @@ function App() {
         <nav className="primary-nav" aria-label="Primary">
           <button type="button" className="logo-pill" onClick={() => navigate('/')} aria-label="BarBa home">
             <span className="mascot-mark">BB</span>
-            <span>BarBa</span>
+            <span className="brand-wordmark">BarBa</span>
           </button>
-          <p>Bayar Bagi</p>
+          <p className="brand-tagline">Bayar Bagi</p>
         </nav>
 
         <div className="subnav-strip" aria-label="Workflow progress">
@@ -139,7 +139,9 @@ function App() {
             <span
               key={item.key}
               className={`step-pill ${(isRemoteBillRoute || step === item.key) ? 'is-active' : ''} ${index < activeStepIndex ? 'is-complete' : ''}`}
+              aria-current={(isRemoteBillRoute || step === item.key) ? 'step' : undefined}
             >
+              <span className="step-index" aria-hidden="true">{index + 1}</span>
               {item.label}
             </span>
           ))}
@@ -150,6 +152,11 @@ function App() {
             <p className="hero-kicker">Shared expenses, without the guesswork</p>
             <h1>{isRemoteBillRoute ? 'Your shared bill' : 'Split the bill. Keep it simple.'}</h1>
             <p className="hero-tagline">Upload a receipt, review the items, assign each share, and settle up with a clear summary.</p>
+          </div>
+          <div className="hero-orbit" aria-hidden="true">
+            <span className="orbit-ring" />
+            <span className="orbit-core">B</span>
+            <span className="orbit-dot" />
           </div>
         </header>
 
