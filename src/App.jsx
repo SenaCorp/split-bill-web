@@ -126,26 +126,12 @@ function App() {
   return (
     <div className="app-page">
       <div className="console-shell">
-        <div className="masthead">
-          <div className="mascot-bubble">
-            <span className="mascot-mark">SB</span>
-            <span>Welcome to SplitBill.com</span>
-          </div>
-          <form className="search-module" onSubmit={(event) => event.preventDefault()}>
-            <label htmlFor="site-search">Search</label>
-            <input id="site-search" type="search" placeholder="Receipt, person, item" />
-            <button type="submit" className="btn-chip">Go</button>
-          </form>
-        </div>
-
         <nav className="primary-nav" aria-label="Primary">
-          <div className="logo-pill">splitbill</div>
-          <span>Upload</span>
-          <span>Scan</span>
-          <span>Split</span>
-          <span>Summary</span>
-          <button type="button" className="btn-chip">Code Bank</button>
-          <button type="button" className="btn-chip" onClick={() => navigate('/design-system')}>Design System</button>
+          <button type="button" className="logo-pill" onClick={() => navigate('/')} aria-label="BarBa home">
+            <span className="mascot-mark">BB</span>
+            <span>BarBa</span>
+          </button>
+          <p>Bayar Bagi</p>
         </nav>
 
         <div className="subnav-strip" aria-label="Workflow progress">
@@ -161,21 +147,13 @@ function App() {
 
         <header className="hero-panel">
           <div>
-            <p className="hero-kicker">Cream-canvas receipt workspace</p>
-            <h1>Split Bill</h1>
-            <p className="hero-tagline">Upload a receipt, verify each item, assign portions, and share a clear settlement plan.</p>
+            <p className="hero-kicker">Shared expenses, without the guesswork</p>
+            <h1>{isRemoteBillRoute ? 'Your shared bill' : 'Split the bill. Keep it simple.'}</h1>
+            <p className="hero-tagline">Upload a receipt, review the items, assign each share, and settle up with a clear summary.</p>
           </div>
-          <span className="arrow-disc" aria-hidden="true">›</span>
         </header>
 
         <div className="content-grid">
-          <aside className="left-rail" aria-label="Quick links">
-            <span>Top Bills</span>
-            <span>Recent</span>
-            <span>People</span>
-            <span>Help</span>
-          </aside>
-
           <main className="workflow-panel" id="upload">
             {isRemoteBillRoute && <BillPage route={route} navigate={navigate} />}
 
@@ -226,28 +204,11 @@ function App() {
             )}
           </main>
 
-          <aside className="action-rail" aria-label="Bill tools">
-            <button type="button" className="rail-button">Login</button>
-            <button type="button" className="rail-button">Subscribe</button>
-            <button type="button" className="rail-button">Newsletter</button>
-            <button type="button" className="rail-button">Help</button>
-
-            <section className="info-box">
-              <h2>How this flow works</h2>
-              <p>Keep receipt scanning, item review, people, splits, and payment tracking in one focused workspace.</p>
-            </section>
-
-            <section className="promo-card">
-              <span>V2</span>
-              <strong>Group Pay</strong>
-              <small>Warm, clear settlement tracking for shared meals.</small>
-            </section>
-          </aside>
         </div>
 
         <footer className="footer-bar">
-          <span>©2026 Split Bill. Built as a compact chrome workflow.</span>
-          <span className="esrb-badge">PRIVACY CERTIFIED</span>
+          <span>©2026 BarBa</span>
+          <span>Bayar Bagi</span>
         </footer>
       </div>
     </div>

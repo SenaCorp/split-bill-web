@@ -1,8 +1,8 @@
-# Split Bill 🧾✨
+# BarBa — Bayar Bagi 🧾✨
 
 A modern web application that simplifies dividing restaurant bills or shared expenses. Upload a receipt photo, let AI extract the receipt items, then split the bill by person, item, and portion.
 
-![Split Bill AI Demo](https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3)
+![BarBa — Bayar Bagi demo](https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=1000&ixlib=rb-4.0.3)
 *(Note: Replace with an actual screenshot of the app.)*
 
 ## 🚀 Features
