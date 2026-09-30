@@ -139,7 +139,6 @@ JSON format:
         <Loader2 className="animate-spin" size={44} />
         <h2>Processing receipt</h2>
         <p>{status}</p>
-        <small>Using {OPENAI_MODEL} via backend proxy. The API key stays on the server.</small>
       </div>
     </section>
   );
