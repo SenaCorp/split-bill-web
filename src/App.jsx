@@ -30,7 +30,7 @@ const parseRoute = () => {
 };
 
 function BrandMark() {
-  return <span className="brand-mark" aria-hidden="true"><i /><i /></span>;
+  return <img className="brand-mark" src={withBasePath('/barba-logo.png')} alt="" aria-hidden="true" />;
 }
 
 function StepProgress({ step }) {
