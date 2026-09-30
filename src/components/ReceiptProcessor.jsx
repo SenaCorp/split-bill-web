@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { ScanLine, AlertCircle } from 'lucide-react';
 import { apiUrl } from '../utils/api';
 
 const OPENAI_MODEL = 'gpt-5-mini';
@@ -136,7 +136,7 @@ JSON format:
     <section className="flow-card state-card">
       <div className="section-label-bar">Receipt scan</div>
       <div className="state-body">
-        <Loader2 className="animate-spin" size={44} />
+        <ScanLine className="processing-icon" size={44} aria-hidden="true" />
         <h2>Processing receipt</h2>
         <p>{status}</p>
       </div>

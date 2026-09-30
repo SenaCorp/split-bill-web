@@ -3,8 +3,6 @@ import { Minus, Plus } from 'lucide-react';
 
 const lineTotal = (item) => (Number(item.price) || 0) * (Number(item.quantity) || 1);
 const getQuantity = (item) => Math.max(1, Number(item.quantity) || 1);
-const isSharedSingleItem = (item) => getQuantity(item) === 1;
-
 const normalizeAssignmentMap = (value) => {
   if (!value) {
     return {};
@@ -20,21 +18,10 @@ const normalizeAssignmentMap = (value) => {
 export default function Splitter({ items, people, assignments, setAssignments, onNext }) {
   const updatePortion = (item, personId, delta) => {
     const itemId = item.id;
-    const quantity = getQuantity(item);
-    const canShareSingleItem = isSharedSingleItem(item);
-
     setAssignments((prev) => {
       const currentAssigned = normalizeAssignmentMap(prev[itemId]);
       const currentPortion = Math.max(0, Number(currentAssigned[personId]) || 0);
-      const currentTotal = Object.values(currentAssigned).reduce((sum, count) => sum + (Number(count) || 0), 0);
-
-      if (delta > 0 && !canShareSingleItem && currentTotal >= quantity) {
-        return prev;
-      }
-
-      const nextPortion = canShareSingleItem
-        ? Math.max(0, Math.min(1, currentPortion + delta))
-        : Math.max(0, currentPortion + delta);
+      const nextPortion = Math.max(0, currentPortion + delta);
       const nextAssigned = { ...currentAssigned, [personId]: nextPortion };
 
       if (nextPortion <= 0) {
@@ -68,7 +55,6 @@ export default function Splitter({ items, people, assignments, setAssignments, o
     const assignedMap = normalizeAssignmentMap(assignments[item.id]);
     const assignedTotalPortion = Object.values(assignedMap).reduce((sum, count) => sum + (Number(count) || 0), 0);
     const assignedPeopleCount = Object.values(assignedMap).filter((count) => (Number(count) || 0) > 0).length;
-    const canShareSingleItem = quantity === 1;
 
     return {
       itemId: item.id,
@@ -76,8 +62,7 @@ export default function Splitter({ items, people, assignments, setAssignments, o
       assignedMap,
       assignedTotalPortion,
       assignedPeopleCount,
-      canShareSingleItem,
-      isValid: canShareSingleItem ? assignedPeopleCount > 0 : assignedTotalPortion === quantity
+      isValid: assignedPeopleCount > 0
     };
   });
 
@@ -90,7 +75,7 @@ export default function Splitter({ items, people, assignments, setAssignments, o
         <div>
           <div className="section-label-bar">Bagikan pesanan</div>
           <h2>Siapa makan apa?</h2>
-          <p>Ketuk plus untuk memberi porsi. Satu item tetap bisa dinikmati bareng.</p>
+          <p>Ketuk plus untuk memberi bobot porsi. Berapa pun jumlah itemnya bisa dibagi ke lebih banyak teman.</p>
         </div>
         {invalidItems > 0 && <span className="status-badge is-error">{invalidItems} invalid</span>}
       </div>
@@ -103,12 +88,9 @@ export default function Splitter({ items, people, assignments, setAssignments, o
             const quantity = state?.quantity || 1;
             const assignedTotalPortion = state?.assignedTotalPortion || 0;
             const assignedPeopleCount = state?.assignedPeopleCount || 0;
-            const canShareSingleItem = state?.canShareSingleItem || false;
             const isAssigned = assignedTotalPortion > 0;
             const isValid = state?.isValid || false;
             const total = lineTotal(item);
-            const unitPrice = quantity > 0 ? total / quantity : total;
-            const sharedSingleItemShare = assignedPeopleCount > 0 ? total / assignedPeopleCount : 0;
 
             return (
               <article key={item.id} className={`assignment-card ${isValid ? 'is-valid' : 'is-invalid'}`}>
@@ -121,17 +103,17 @@ export default function Splitter({ items, people, assignments, setAssignments, o
                 </div>
 
                 <div className={`assignment-status ${isValid ? 'is-valid' : 'is-invalid'}`}>
-                  {canShareSingleItem
-                    ? `Shared by ${assignedPeopleCount} people`
-                    : `Assigned portions: ${assignedTotalPortion}/${quantity}`}
+                  {assignedPeopleCount > 0
+                    ? `Dibagi ke ${assignedPeopleCount} teman · total bobot ${assignedTotalPortion}`
+                    : 'Pilih minimal satu teman'}
                 </div>
 
                 <div className="portion-grid">
                   {people.map((person) => {
                     const portions = Math.max(0, Number(assignedMap[person.id]) || 0);
-                    const share = canShareSingleItem
-                      ? (portions > 0 ? sharedSingleItemShare : 0)
-                      : portions * unitPrice;
+                    const share = assignedTotalPortion > 0
+                      ? total * (portions / assignedTotalPortion)
+                      : 0;
                     return (
                       <div key={person.id} className={`portion-chip ${portions > 0 ? 'is-active' : ''}`} style={{ '--person-color': person.color }}>
                         <button
@@ -157,9 +139,7 @@ export default function Splitter({ items, people, assignments, setAssignments, o
 
                 {isAssigned && !isValid && (
                   <div className="inline-error">
-                    {canShareSingleItem
-                      ? 'Choose at least one person for this item.'
-                      : `Total portions must be ${quantity}. Current: ${assignedTotalPortion}.`}
+                    Pilih minimal satu teman untuk item ini.
                   </div>
                 )}
 
