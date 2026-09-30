@@ -1,7 +1,5 @@
 export const lineTotal = (item) => (Number(item.price) || 0) * (Number(item.quantity) || 1);
 export const getQuantity = (item) => Math.max(1, Number(item.quantity) || 1);
-export const isSharedSingleItem = (item) => getQuantity(item) === 1;
-
 export const normalizeAssignmentMap = (value) => {
   if (!value) {
     return {};
@@ -36,39 +34,34 @@ export const calculateBillTotals = ({ items = [], people = [], assignments = {},
 
   items.forEach((item) => {
     const assignedMap = normalizeAssignmentMap(assignments[item.id]);
-    const assignedEntries = Object.entries(assignedMap).filter(([, portion]) => (Number(portion) || 0) > 0);
+    const assignedEntries = Object.entries(assignedMap).filter(([personId, portion]) => (
+      totals[personId] && (Number(portion) || 0) > 0
+    ));
 
     if (!assignedEntries.length) {
       return;
     }
 
-    const quantity = getQuantity(item);
     const total = lineTotal(item);
-    const unitPrice = quantity > 0 ? total / quantity : total;
-    const canShareSingleItem = isSharedSingleItem(item);
+    const totalWeight = assignedEntries.reduce((sum, [, portion]) => sum + Math.max(0, Number(portion) || 0), 0);
 
-    let itemAssignedSubtotal = 0;
+    if (totalWeight <= 0) {
+      return;
+    }
 
     assignedEntries.forEach(([pid, portion]) => {
-      if (!totals[pid]) {
-        return;
-      }
-
       const safePortion = Math.max(0, Number(portion) || 0);
-      const personShare = canShareSingleItem
-        ? total / assignedEntries.length
-        : safePortion * unitPrice;
-      itemAssignedSubtotal += personShare;
+      const personShare = total * (safePortion / totalWeight);
 
       totals[pid].subtotal += personShare;
       totals[pid].items.push({
         name: item.name,
-        quantity: canShareSingleItem ? 1 : safePortion,
+        quantity: safePortion,
         share: personShare
       });
     });
 
-    assignedSubtotal += canShareSingleItem ? total : Math.min(total, itemAssignedSubtotal);
+    assignedSubtotal += total;
   });
 
   const allSubtotal = items.reduce((sum, item) => sum + lineTotal(item), 0);
