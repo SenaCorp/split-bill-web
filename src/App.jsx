@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Check, CircleDollarSign, Pencil, Receipt, RotateCcw, ScanLine, Sparkles, Users } from 'lucide-react';
+import { ArrowLeft, Check, CircleDollarSign, Pencil, Receipt, ScanLine, Sparkles, Users } from 'lucide-react';
 import ImageUploader from './components/ImageUploader';
 import ReceiptProcessor from './components/ReceiptProcessor';
 import ItemEditor from './components/ItemEditor';
@@ -20,6 +20,14 @@ const FLOW = [
   { key: 'split', label: 'Bagi', icon: CircleDollarSign },
   { key: 'summary', label: 'Beres', icon: Sparkles }
 ];
+
+const PREVIOUS_STEP = {
+  processing: 'upload',
+  edit: 'upload',
+  people: 'edit',
+  split: 'people',
+  summary: 'split'
+};
 
 const parseRoute = () => {
   const segments = stripBasePath(window.location.pathname).split('/').filter(Boolean);
@@ -86,6 +94,7 @@ export default function App() {
     setTaxRate(DEFAULT_WORKFLOW.taxRate); setServiceRate(DEFAULT_WORKFLOW.serviceRate); setDiscountAmount(DEFAULT_WORKFLOW.discountAmount);
     setPaymentMethod({ ...DEFAULT_PAYMENT_METHOD });
   };
+  const goBack = () => setStep((currentStep) => PREVIOUS_STEP[currentStep] || currentStep);
 
   if (route.mode === 'design') return <DesignPreview navigate={navigate} />;
   const context = remote ? (route.mode === 'pay' ? 'Bayar bagianmu' : route.mode === 'admin' ? 'Pantau pembayaran' : 'Rincian tagihan') : FLOW.find((x) => x.key === step)?.label;
@@ -94,7 +103,7 @@ export default function App() {
     <nav className="floating-nav" aria-label="Navigasi utama">
       <button className="brand-button" onClick={() => navigate('/')} aria-label="Beranda BarBa"><BrandMark /><span><strong>BarBa</strong><small>Bayar Bagi</small></span></button>
       <span className="nav-context">{context}</span>
-      {!remote && step !== 'upload' ? <button className="nav-action" onClick={reset} aria-label="Mulai pembagian baru" title="Mulai lagi"><RotateCcw size={18} /><span>Mulai lagi</span></button> : <span className="nav-dot" aria-hidden="true" />}
+      {!remote && step !== 'upload' ? <button className="nav-action" onClick={goBack} aria-label="Kembali ke langkah sebelumnya" title="Kembali"><ArrowLeft size={18} /><span>Kembali</span></button> : <span className="nav-dot" aria-hidden="true" />}
     </nav>
     <div className="app-shell">
       {!remote && <StepProgress step={step} />}
