@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ArrowLeft, Check, CircleDollarSign, Pencil, Receipt, ScanLine, Sparkles, Users } from 'lucide-react';
+import { AlertTriangle, ArrowLeft, Check, CircleDollarSign, Pencil, Receipt, ScanLine, Sparkles, Users } from 'lucide-react';
 import ImageUploader from './components/ImageUploader';
 import ReceiptProcessor from './components/ReceiptProcessor';
 import ItemEditor from './components/ItemEditor';
@@ -72,6 +72,7 @@ export default function App() {
   const [serviceRate, setServiceRate] = useState(initialWorkflow.serviceRate);
   const [discountAmount, setDiscountAmount] = useState(initialWorkflow.discountAmount);
   const [paymentMethod, setPaymentMethod] = useState(initialWorkflow.paymentMethod);
+  const [showUploadWarning, setShowUploadWarning] = useState(false);
   const remote = route.mode !== 'home';
 
   const navigate = useCallback((path) => { window.history.pushState({}, '', withBasePath(path)); setRoute(parseRoute()); }, []);
@@ -79,6 +80,14 @@ export default function App() {
   useEffect(() => {
     saveWorkflow({ step, image, items, people, assignments, taxRate, serviceRate, discountAmount, paymentMethod });
   }, [step, image, items, people, assignments, taxRate, serviceRate, discountAmount, paymentMethod]);
+  useEffect(() => {
+    if (!showUploadWarning) return undefined;
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setShowUploadWarning(false);
+    };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [showUploadWarning]);
   const handleItemsFound = useCallback((foundItems, foundTax = 0, foundService = 0) => {
     setItems(foundItems); setDiscountAmount(0);
     const subtotal = foundItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -94,12 +103,39 @@ export default function App() {
     setTaxRate(DEFAULT_WORKFLOW.taxRate); setServiceRate(DEFAULT_WORKFLOW.serviceRate); setDiscountAmount(DEFAULT_WORKFLOW.discountAmount);
     setPaymentMethod({ ...DEFAULT_PAYMENT_METHOD });
   };
-  const goBack = () => setStep((currentStep) => PREVIOUS_STEP[currentStep] || currentStep);
+  const goBack = () => {
+    if (PREVIOUS_STEP[step] === 'upload') {
+      setShowUploadWarning(true);
+      return;
+    }
+    setStep(PREVIOUS_STEP[step] || step);
+  };
+
+  const confirmUploadAgain = () => {
+    setShowUploadWarning(false);
+    setStep('upload');
+  };
 
   if (route.mode === 'design') return <DesignPreview navigate={navigate} />;
   const context = remote ? (route.mode === 'pay' ? 'Bayar bagianmu' : route.mode === 'admin' ? 'Pantau pembayaran' : 'Rincian tagihan') : FLOW.find((x) => x.key === step)?.label;
 
   return <div className="app-page">
+    {showUploadWarning && <div className="confirmation-backdrop" role="presentation" onMouseDown={(event) => {
+      if (event.target === event.currentTarget) setShowUploadWarning(false);
+    }}>
+      <section className="confirmation-dialog" role="alertdialog" aria-modal="true" aria-labelledby="upload-warning-title" aria-describedby="upload-warning-description">
+        <span className="confirmation-icon" aria-hidden="true"><AlertTriangle size={26} /></span>
+        <div>
+          <p className="section-label-bar">Konfirmasi</p>
+          <h2 id="upload-warning-title">Upload foto struk lagi?</h2>
+          <p id="upload-warning-description">Apakah Anda akan mengulang upload foto struk? Anda akan kembali ke langkah paling awal.</p>
+        </div>
+        <div className="confirmation-actions">
+          <button className="btn-secondary" onClick={() => setShowUploadWarning(false)} autoFocus>Tetap di sini</button>
+          <button className="btn-submit" onClick={confirmUploadAgain}>Ya, upload ulang</button>
+        </div>
+      </section>
+    </div>}
     <nav className="floating-nav" aria-label="Navigasi utama">
       <button className="brand-button" onClick={() => navigate('/')} aria-label="Beranda BarBa"><BrandMark /><span><strong>BarBa</strong><small>Bayar Bagi</small></span></button>
       <span className="nav-context">{context}</span>
