@@ -10,6 +10,7 @@ import PaymentMethodSetup from './components/PaymentMethodSetup';
 import BillPage from './components/BillPage';
 import DesignPreview from './components/DesignPreview';
 import { stripBasePath, withBasePath } from './utils/basePath';
+import { clearWorkflow, DEFAULT_PAYMENT_METHOD, DEFAULT_WORKFLOW, loadWorkflow, saveWorkflow } from './utils/workflowStorage';
 
 const FLOW = [
   { key: 'upload', label: 'Struk', icon: Receipt },
@@ -52,20 +53,24 @@ function StepProgress({ step }) {
 }
 
 export default function App() {
+  const [initialWorkflow] = useState(loadWorkflow);
   const [route, setRoute] = useState(parseRoute);
-  const [step, setStep] = useState('upload');
-  const [image, setImage] = useState(null);
-  const [items, setItems] = useState([]);
-  const [people, setPeople] = useState([]);
-  const [assignments, setAssignments] = useState({});
-  const [taxRate, setTaxRate] = useState(10);
-  const [serviceRate, setServiceRate] = useState(5);
-  const [discountAmount, setDiscountAmount] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState({ bankName: '', accountNumber: '', accountHolder: '', qrisText: '' });
+  const [step, setStep] = useState(initialWorkflow.step);
+  const [image, setImage] = useState(initialWorkflow.image);
+  const [items, setItems] = useState(initialWorkflow.items);
+  const [people, setPeople] = useState(initialWorkflow.people);
+  const [assignments, setAssignments] = useState(initialWorkflow.assignments);
+  const [taxRate, setTaxRate] = useState(initialWorkflow.taxRate);
+  const [serviceRate, setServiceRate] = useState(initialWorkflow.serviceRate);
+  const [discountAmount, setDiscountAmount] = useState(initialWorkflow.discountAmount);
+  const [paymentMethod, setPaymentMethod] = useState(initialWorkflow.paymentMethod);
   const remote = route.mode !== 'home';
 
   const navigate = useCallback((path) => { window.history.pushState({}, '', withBasePath(path)); setRoute(parseRoute()); }, []);
   useEffect(() => { const onPop = () => setRoute(parseRoute()); window.addEventListener('popstate', onPop); return () => window.removeEventListener('popstate', onPop); }, []);
+  useEffect(() => {
+    saveWorkflow({ step, image, items, people, assignments, taxRate, serviceRate, discountAmount, paymentMethod });
+  }, [step, image, items, people, assignments, taxRate, serviceRate, discountAmount, paymentMethod]);
   const handleItemsFound = useCallback((foundItems, foundTax = 0, foundService = 0) => {
     setItems(foundItems); setDiscountAmount(0);
     const subtotal = foundItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -75,7 +80,12 @@ export default function App() {
     }
     setStep('edit');
   }, []);
-  const reset = () => { setStep('upload'); setImage(null); setItems([]); setPeople([]); setAssignments({}); setTaxRate(10); setServiceRate(5); setDiscountAmount(0); setPaymentMethod({ bankName: '', accountNumber: '', accountHolder: '', qrisText: '' }); };
+  const reset = () => {
+    clearWorkflow();
+    setStep(DEFAULT_WORKFLOW.step); setImage(DEFAULT_WORKFLOW.image); setItems([]); setPeople([]); setAssignments({});
+    setTaxRate(DEFAULT_WORKFLOW.taxRate); setServiceRate(DEFAULT_WORKFLOW.serviceRate); setDiscountAmount(DEFAULT_WORKFLOW.discountAmount);
+    setPaymentMethod({ ...DEFAULT_PAYMENT_METHOD });
+  };
 
   if (route.mode === 'design') return <DesignPreview navigate={navigate} />;
   const context = remote ? (route.mode === 'pay' ? 'Bayar bagianmu' : route.mode === 'admin' ? 'Pantau pembayaran' : 'Rincian tagihan') : FLOW.find((x) => x.key === step)?.label;
