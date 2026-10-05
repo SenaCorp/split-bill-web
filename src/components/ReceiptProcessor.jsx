@@ -39,6 +39,7 @@ export default function ReceiptProcessor({ image, onItemsFound }) {
       return;
     }
 
+    const controller = new AbortController();
     const processImage = async () => {
       setStatus('Sending receipt to OpenAI...');
 
@@ -63,6 +64,7 @@ JSON format:
 }`;
 
         const response = await fetch(apiUrl('/api/receipt-ocr'), {
+          signal: controller.signal,
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -111,12 +113,14 @@ JSON format:
 
         onItemsFound(validItems, Number(data.tax) || 0, Number(data.service) || 0);
       } catch (err) {
+        if (err.name === 'AbortError') return;
         console.error('OpenAI OCR Error:', err);
         setError(`Failed to process receipt with OpenAI. ${err.message}`);
       }
     };
 
     processImage();
+    return () => controller.abort();
   }, [image, onItemsFound]);
 
   if (error) {
